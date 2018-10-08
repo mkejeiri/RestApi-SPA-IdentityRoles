@@ -1,6 +1,7 @@
 # .Net Core Web API and Angular 6
 # New Features!
-This is an update of Dating App implementing new Framework features : 
+
+This is an update of [Dating App](https://github.com/mkejeiri/DatingApp) implementing new Framework features : 
   - SPA part using Angular 6 new Libaries
   - API part using Identity (user, role) for authentication!
 
@@ -22,5 +23,3 @@ $ dotnet watch run
 $ ng serve --watch --open
 ```
 > > NOTE:  by defaut the API will run in Development mode, also the wwwroot folder contains a build version of the SPA to be served as a static files. 
-
-Enjoy...
