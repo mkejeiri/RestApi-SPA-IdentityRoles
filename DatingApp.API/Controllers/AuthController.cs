@@ -14,6 +14,7 @@ using AutoMapper;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 // using System.Collections.Generic;
 // using System.Linq;
 
@@ -89,15 +90,21 @@ namespace DatingApp.API.Controllers
             return Unauthorized();
         }
 
-        private string GetToken(User user)
+        private async Task<string> GetToken(User user)
         {
             //Start Token building
             //1- create a claims so that the server doesn't go to the DB to check for credentials: Id & username      
-            var claims = new[]
+            var claims = new List<Claim>
             {
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             /*
                 Token server signing!: to make sure that when the token is comming back is valid!

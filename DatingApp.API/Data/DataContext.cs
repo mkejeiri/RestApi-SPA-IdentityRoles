@@ -24,7 +24,7 @@ namespace DatingApp.API.Data
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options){}
         //to tell entity framework about our entities we need to give properties
-        // public DbSet<Value> Values { get; set; }
+        public DbSet<Value> Values { get; set; }
         // public DbSet<User> Users { get; set; } //will come from asp.core.entity
         public DbSet<Photo> Photos { get; set; }
 
