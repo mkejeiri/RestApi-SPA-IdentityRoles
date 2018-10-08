@@ -1,0 +1,43 @@
+=====
+settings.json
+=====
+
+{
+  "deploy": {
+    "packages": [
+      {
+        "name": "Version 1.0",
+        "description": "Dating App Version 1.0",
+        "files": ["DatingApp.API/bin/Debug/netcoreapp2.1/publish/**"]
+      }
+    ],
+    "targets": [
+      {
+        "type": "sftp",
+        "name": "Linux",
+        "description": "Remote Linux Server",
+        "dir": "/var/datingapp",
+        "mappings": [
+            {
+                "source": "/DatingApp.API/bin/Debug/netcoreapp2.1/publish",
+                "target": "/"
+            }
+        ],
+        "host": "your servers ip address",
+        "port": 22,
+        "user": "root", "password": "your password",
+        "checkBeforeDeploy": true
+      }
+    ]
+  }
+}
+
+
+======
+restart service
+======
+sudo systemctl enable kestrel-web.service
+sudo systemctl restart kestrel-web.service
+
+
+

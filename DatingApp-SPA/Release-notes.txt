@@ -1,0 +1,241 @@
+---------------------------------------------------------
+adding alertifyjs, angular JWT, NGX Bootstrap, Bootswatch
+----------------------------------------------------------
+1- alertifyjs: allow us to display beautiful alert on screen, see more on https://alertifyjs.com/
+    npm install alertifyjs --save
+    a- we need to add "node_modules/alertifyjs/build/alertify.js" in script  angular.json
+    b- create a service wrapper around alertify:
+        1- declare 'alertify.js' in script angular.json
+        2- import "alertify.min.css" and 'themes/bootstrap.min.css' in style.css
+        3- create a service AlertifyService
+        4- declare 'declare let alertify: any;'
+        5- redefine methods confirm,success,error,warning,message
+        6- Inject the service into the app.module to make available accross app.
+
+2-  angular JWT allow us to check if the token is expired and doesn't change anything on security level
+    See more on https://github.com/auth0/angular2-jwt
+    npm install @auth0/angular-jwt@2.0.0
+
+3- Using NGX Bootstrap instead of jquery, because it promotes components usage, same idea as angular, we could also use jquery!  
+    npm install ngx-bootstrap@3.0.1 --save
+
+4- bootswatch allow us to get a nice themes and colors
+    npm install bootswatch@4.1.1
+    we use united themes by adding : @import "../node_modules/bootswatch/dist/united/bootstrap.min.css" 
+    to the styles.css
+----------------------------------------------------------
+Routing :angular out of the box solution
+----------------------------------------------------------
+    1- creating components: messages, members, lists
+    2- adding: routerLinkActive="active" & [routerLink]="['/messages']"
+    3- creating a routes in file routes.routing.ts
+    4- adding the routing to appModule
+    5- protecting the route - create an AuthGuard : ng g guard auth --spec=false, implement canActivate method
+    6- protecting multiple route at once: re-arrange childeren components that need authorisation access 
+    7- use wild card for default routing (use '' instead of 'home')
+
+
+
+-----------------------------------------------------------------------------
+Adding : route resolver, using built-in interceptors jwt,ngx bootstrap, ngx-gallery 
+-----------------------------------------------------------------------------
+1- auth0/angular2-jwt interceptors authorization headers: https://github.com/auth0/angular2-jwt
+    after injecting the JwtHelperService into the appModule and some config such as :
+        export function tokenGetter() {
+        return localStorage.getItem('access_token');
+        }
+
+        JwtModule.forRoot({
+            config: {
+                tokenGetter: tokenGetter,
+                whitelistedDomains: ['localhost:5000'],
+                blacklistedRoutes: ['localhost:5000/api/auth']
+            }
+            })
+            
+    the framework use 'JwtModule' which will retrieve automatically the token, intercept all requests going to localhost:5000 and add the headerOptions into the request before sending them to the server, and also ignoring the blacklistedRoutes,
+    such as : 'localhost:5000/api/auth'
+
+2- ngx bootstrap tab : see https://valor-software.com/ngx-bootstrap/?gclid=Cj0KCQjw3KzdBRDWARIsAIJ8TMSsxAx35og1c2aaaXXVhqX7YzcK_sXw6IW2gkbPzY5p3ioDo_Ic1QsaAqyaEALw_wcB#/tabs
+2- route resolver allow us to reload the data before even the component get loaded the avoid access 
+    to properties when they are not yet available. As a temporary solution we could use ? to make them optional
+    e.g: user?.name, see https://angular.io/api/router/Resolve
+
+    a- we need to create the resolver manually (file) add it to the providers list of the appModule
+    b- use it in thr file routing by specifying the keyword resolver and the property (e.g. prop = 'user' or 'uses') that we will retrieve from activatedRoute.params['prop'].
+    eg: inside my component for users property
+                ngOnInit() {
+                this.route.data.subscribe(
+                    (data) => {
+                    this.users = data['users'];
+                    }
+                );
+                }
+3- use ngx gallery: https://www.npmjs.com/package/ngx-gallery
+    a- npm install ngx-gallery@5.3.2 --save and follow the intruction on https://www.npmjs.com/package/ngx-gallery
+
+
+-----------------------------------------------------------------------------
+created user profile component and allow user to update his/her profile
+-----------------------------------------------------------------------------
+1- created a edit profile component
+2- canDesactivate route guard
+3- adding 'HostListener' to prevent user to close browser in case of changes
+    @HostListener('window:beforeunload', ['$event'])
+    unloadNotification($event: any) {
+        if (this.editForm.dirty) {
+        $event.returnValue = true;
+        }
+    }
+4- using @ViewChild to access to the form component template and reset it and test if it's dirty
+    @ViewChild('editForm') editForm: NgForm;
+
+5- persisted changes to the API
+6- use of Output with event emitter and replacement with BehaviorSubject
+differences summarized.
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃         Observable                  ┃     BehaviorSubject/Subject         ┃      
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╋━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫ 
+│ Is just a function, no state        │ Has state. Stores data in memory    │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Code run for each observer          │ Same code run                       │
+│                                     │ only once for all observers         │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Creates only Observable             │Can create and also listen Observable│
+│ ( data producer alone )             │ ( data producer and consumer )      │
+├─────────────────────────────────────┼─────────────────────────────────────┤
+│ Usage: Simple Observable with only  │ Usage:                              │
+│ one Obeserver.                      │ * Store data and modify frequently  │
+│                                     │ * Multiple observers listen to data │
+│                                     │ * Proxy between Observable  and     │
+│                                     │   Observer                          │
+└─────────────────────────────────────┴─────────────────────────────────────┘
+
+7- implement of deletion and main photo settings and the usage of localhost to store user along with its token
+8- showing also the thumbnail picture as an icone along with the name of logged in user and sync of all photos 
+    when they change to main photo.
+
+
+
+-----------------------------------------------------------------------------
+Expanding register form
+-----------------------------------------------------------------------------
+1 - use of reactive form and validation, better that template form approach, it keeps html clean
+2 - adding customs validation such as confirm password
+3 - date PB: date type  (datepicker) is not implemented and it's up the browser to implement this, some browser
+    doesn't implement this and we need to keep a uniform UI browser wide!, see more : https://caniuse.com/
+4- adding a default user photo from asset in case there isn't any.
+
+-----------------------------------------------------------------------------
+Date formating : Memeber since & Last Active
+-----------------------------------------------------------------------------
+1 - use of {{user.created|date:'mediumDate'}}
+2 - use of {{user.lastActive|timeAgo}} more see: https://www.npmjs.com/package/time-ago-pipe  
+
+-----------------------------------------------------------------------------
+Fitlering & pagination  & sorting
+-----------------------------------------------------------------------------
+- use ngx bootstrap to add pagination and buttons
+
+
+-----------------------------------------------------------------------------
+Adding likes and see likees
+-----------------------------------------------------------------------------
+1 - add like functionality
+2 - Using ngx bootstrap buttons and paginations
+3 - Using the new LikeParamsResolver which gets of likeParams value before even the ListsComponent loaded
+
+-----------------------------------------------------------------------------
+Publishing the DatingApp :
+-----------------------------------------------------------------------------
+0- Seed only if there is no user in the DB
+1- config the distribution to point to API 'wwwroot' folder and use ng build, see 
+   the available options for optimization. Obviously ng build will create a big file (~4MB),
+   we need to optimize this. 
+   a- ng build --prod (= ng build --prod --build-optimizer=true) will allow ahead of time (aot vs JIT in dev mode) compilation, and since
+       the aot compilation is already done, the vendor.js (sizeable file which includes angular compiler)
+       will be needed no more!.  
+       minification + uglyfication (dead code algorithm -> unused/dead code removal) will implicitly take place       
+
+        I M P O R T A N T => - ng build includes : Bundling, minification, tree shaking (dead-code elimination),
+                             output hashing, AoT compilation. more info...: https://webpack.js.org/guides/       
+                             - JIT=ng serve (vs AoT) use in Dev mode will load the following output files in memory: 
+                                --------(DO NOT EXIST physically = just in memory)--------- 
+                                Date: 2018-10-07T10:08:03.160Z
+                                Hash: 50a7bde4436787d551d1
+                                Time: 8950ms
+                                chunk {main} main.js, main.js.map (main) 162 kB [initial] [rendered]
+                                chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 227 kB [initial] [rendered]
+                                chunk {runtime} runtime.js, runtime.js.map (runtime) 6.22 kB [entry] [rendered]
+                                chunk {scripts} scripts.js, scripts.js.map (scripts) 140 kB  [rendered]
+                                chunk {styles} styles.js, styles.js.map (styles) 353 kB [initial] [rendered]
+                                chunk {vendor} vendor.js, vendor.js.map (vendor) 4.89 MB [initial] 
+
+                            - AoT benefits : 
+                                    - faster rendering: no need to wait for compilation
+                                    - Few async requests: AoT compiler also inlines HTML templates and CSS files 
+                                                          and help reduce the amount of asynchronous requests sent by the application,
+                                                          so less async request, html/css templates are inline JS bundled directly into the app.
+                                    - smaller framework download size : no need to download the compiler (vendor.js) - app already compiled 
+                                    - detect template errors earlier
+                                    - better security: fewer opportunity injection attach, no css or html template to read.
+
+
+   b- ng build --prod will optimize the source code in such a way that it will affect alertify functionality,
+      that why we need to use  ng build --prod --build-optimizer=false
+   c- with ng build the name of the file is hashed (output hashing) which means it time a file content change the client 
+      is forced to get the lastest Version!!!    
+2-Order matters for serving SPA (static files) in startup.cs file
+    a-  app.UseDefaultFiles(); //look for html index (or asp, php, ....)
+    b-  app.UseStaticFiles();  //serve static file from wwwroot folder. 
+
+3- How to deal with the issue of refreshing SPA routed pages and prevent API to override the 
+   the SPA routing, basically we need to tell the API what should do with the unknow route!!!
+   a- we give  app.UseMvc() some route configuration and create a dedicated controller (Fallback) 
+   to deal with this:
+                app.UseMvc(routes => {
+                            routes.MapSpaFallbackRoute(
+                                    name: "spa-fallback",
+                                    defaults: new {
+                                        controller = "Fallback", //Controller name to use
+                                        action ="Index" //action method to call in the Fallback controller
+                                    }
+                                );
+                            });
+                
+                public class Fallback : Controller 
+                {
+                    IActionResult Index(){
+                        //return a physical full path filename : index.html
+                        return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), 
+                        "wwwroot","index.html"),"text/HTML");
+                    }
+                }
+
+
+
+   b- those change imply that we need to restart kestral server (dotnet watch run doesn't work!). 
+
+- 4 : we need to set 'environment.prod.ts' file
+            export const environment = {
+            production: true,
+            apiUrl: 'api/'
+            };
+
+- 5 : since we serving SPA from the same domaine we don't need to configure whitelistedDomains for JwtModule
+
+- 6: Solving the warning : when using includes and not returning the type that we suppose to retunr EF give this warning 
+    Here : we cause we do a count on the IQueryable before returning a PagedList<User> (see CreateAsync in PagedList class) 
+    The Include operation for navigation '[m].Recipient.Photos' is unnecessary and was ignored 
+    because the navigation is not reachable in the final query results. 
+    See https://docs.microsoft.com/en-us/ef/core/querying/related-data
+
+    services.AddDbContext<DataContext>(x => x.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
+    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))); 
+
+7- dotnet ef migrations script -o datingApp-mysql.sql
+8- mysql operations:    
+    - create DDL for DB: dotnet ef migrations script -o datingApp-mysql.sql 
+    - create DB: mysql> Create database datingApp   
+    - run the script: mysql> source ./datingApp-mysql.sql

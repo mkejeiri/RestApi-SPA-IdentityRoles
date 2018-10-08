@@ -1,0 +1,94 @@
+====
+mysql commands
+====
+
+mysql -u root -p
+
+CREATE USER 'appuser'@'localhost' IDENTIFIED BY 'password';
+
+GRANT ALL PRIVILEGES ON *.* TO 'appuser'@'localhost' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+===== 
+enable mod proxy apache
+=====
+
+a2enmod proxy proxy_http proxy_html
+
+=====
+create apache config file
+=====
+sudo nano /etc/apache2/conf-enabled/datingapp.conf
+
+====
+config
+====
+
+<VirtualHost *:80>
+ProxyPreserveHost On
+ProxyPass / http://127.0.0.1:5000/
+ProxyPassReverse / http://127.0.0.1:5000/
+ErrorLog /var/log/apache2/datingapp-error.log
+CustomLog /var/log/apache2/datingapp-access.log common
+</VirtualHost>
+
+====
+restart apache service
+====
+
+sudo service apache2 restart
+
+====
+test the config
+====
+
+mkdir DatingApp.API
+cd DatingApp.API
+dotnet new mvc
+dotnet publish
+
+====
+copy the publish dir into var dir on linux server
+====
+
+sudo cp -a ~/DatingApp.API/bin/Debug/netcoreapp2.1/publish/ /var/DatingApp.API/
+
+====
+set up the kestrel process using systemd to manage the kestrel web server service
+====
+
+sudo nano /etc/systemd/system/kestrel-web.service
+
+====
+kestrel-web.service configuration
+====
+
+[Unit]
+Description=Test app for kestrel service running on Ubuntu 16.04
+[Service]
+WorkingDirectory=/var/DatingApp.API/publish
+ExecStart=/usr/share/dotnet/dotnet /var/DatingApp.API/publish/DatingApp.API.dll
+Restart=always
+RestartSec=10
+SyslogIdentifier=dotnet-DatingApp
+User=www-data
+Environment=ASPNETCORE_ENVIRONMENT=Production
+[Install]
+WantedBy=multi-user.target
+
+====
+Enable the kestrel-web service
+====
+sudo systemctl enable kestrel-web.service
+
+====
+Start the kestrel-web service
+====
+
+sudo systemctl start kestrel-web.service
+
+====
+Test the service is running and listening for requests
+====
+netstat -ntpl

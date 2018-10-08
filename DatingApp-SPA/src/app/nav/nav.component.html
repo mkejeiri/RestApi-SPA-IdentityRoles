@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" [routerLink]="['/']" routerLinkActive="active">DatingApp</a>
+    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active"> 
+        <a class="nav-link" [routerLink]="['/members']"  >Matches</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link"[routerLink]="['/lists']">Lists</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/messages']">Messages</a>
+      </li>
+      <!-- <li class="nav-item">
+      <a class="nav-link" (click) ="logout()" *ngIf="loggedIn()" href="#">Logout</a>
+    </li>    -->
+    </ul>
+    <!-- <div *ngIf="logg edIn()" class="dropdown" dropdown (onShown)="onShown($event)" (onHidden)="onHidden($event)" (isOpenChange)="isOpenChange($event)"> -->
+    <div *ngIf="loggedIn()" class="dropdown" dropdown>
+        <span class="mr-1" >
+            <img src="{{photoUrl || '../../assets/user.png'}}" class="" alt="">
+          </span> 
+      <a class="dropdown-toggle text-light" dropdownToggle (click)="false">               
+        Welcome {{this.authService.decodedToken?.unique_name | titlecase}}
+      </a>
+      <div class="dropdown-menu mt-3"  *dropdownMenu>
+        <a class="dropdown-item" [routerLink]="['/member/edit']"> <i class="fa fa-user"></i> Edit Profile</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" (click)="logout()"> <i class="fa fa-sign-out"></i>Logout</a>
+      </div>
+    </div>
+
+    <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+      <input class="form-control mr-sm-2" name="username" type="text" placeholder="Username" required [(ngModel)]="model.username"
+        #username="ngModel">
+      <input class="form-control mr-sm-2" name="password" type="password" placeholder="Password" required [(ngModel)]="model.password"
+        #password="ngModel">
+      <button class="btn btn-success my-2 my-sm-0" type="submit" [disabled]="!loginForm.valid">Login</button>
+    </form>
+  </div>
+</nav>
+<!-- <pre> 
+  Form valid: {{loginForm.valid}}
+  Form touched: {{loginForm.touched}}
+  Form dirty: {{loginForm.dirty}}
+  Form values: {{loginForm.value |json}}
+  
+  username valid: {{username.valid}}
+  username touched: {{username.touched}}
+  username dirty: {{username.dirty}}
+  username value: {{username.value}}
+  
+  password valid: {{password.valid}}
+  password touched: {{password.touched}}
+  password dirty: {{password.dirty}}
+  password value: {{password.value}}  
+</pre> -->

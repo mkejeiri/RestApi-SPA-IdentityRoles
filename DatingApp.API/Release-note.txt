@@ -1,0 +1,269 @@
+-------------------------------------------
+Extended User Class and adding photo Class
+-------------------------------------------
+1- specifying a navigation property such as public ICollection<Photo> Photos { get; set; } won't allow delete on cascade
+   we will get a 'onDelete: ReferentialAction.Restrict', we won't change migration code because is auto-gen to correct this public  
+
+2- dotnet ef migrations remove : will remove the last migrations
+3- after we run : 'dotnet ef database update' we no longer be able to revert back to the previous stage
+e.g :  'dotnet ef database update AddUserEntity' will fail due to sqlite and not EF, see for more...
+https://docs.microsoft.com/en-us/ef/core/providers/sqlite/limitations
+
+4- we could drop the database and run migration until the point of 'AddUserEntity'
+and we need to seed the db based on json file
+    a- 'dotnet ef database drop', migrations will be stil available
+    b- 'dotnet ef database update AddUserEntity'
+    c- do the necessary changes to allow the delete on cascade : change the nav property accordingly
+        add to photo Class: 
+        public User User { get; set; }
+        public int UserId { get; set; }
+
+    d- remove the old migrations: 'dotnet ef migrations remove' & 
+        add the new one 'dotnet ef migrations add ExtendedUserClass' &
+        run 'dotnet ef database update' again.
+
+
+5- to generate a seed based on a json file visit : https://www.json-generator.com/
+6- inject the seed in startup : services.AddTransient<Seed>() and call for seeder.SeedUser();
+7- we need to create DTO for User and Photo so to hide and recalculate sensible fields (hashed pass and salt), 
+    - a : an automapper (nuget : AutoMapper.Extensions.Microsoft.DependencyInjection -Version 4.1.1)
+    is available to map the field between our entities and DTO's
+    - b: need to be injected and also the mapping is done through the class Helpers.AutoMapperProfile
+8- an UsersController need to be created and to be protected
+9- so far, all the tests are run through postman!!! 
+
+-------------------------------------------
+Update API to receive a put request and update a profile
+-------------------------------------------
+- update UsersController by adding
+[HttpPut("{id}")]
+            public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+            {   
+
+                /*
+                  we need to match the user attempting to update his profile matching the 
+                  id which part of the token in the server
+                */         
+                if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))   return Unauthorized();
+                
+                var userFroRepo = await _repo.GetUser(id);  
+                _mapper.Map(userForUpdateDto, userFroRepo); 
+
+                if (await _repo.SaveAll()) return NoContent();
+                
+                throw new Exception($"updating user with {id} failed");
+            }
+
+    ---------------------------------------------------------
+    photos(upload, removal, profile update,...), adding PhotosController, Couldinary Cloud
+    --------------------------------------------------------
+        1- Create a Couldinary account:
+            Cloud name : dzaqp6jnu
+            API key:813335792476897
+            API secret: QFuIZGlEEqT9CT1_V9cL6A1D5ns
+            Environment variable:cloudinary://813335792476897:QFuIZGlEEqT9CT1_V9cL6A1D5ns@dzaqp6jnu/
+            Cloudinary::Uploader.upload("sample.jpg", :crop => "limit", :tags => "samples", :width => 3000, :height => 2000)
+            See doc for .Net : https://cloudinary.com/documentation/dotnet_integration#_net_getting_started_guide
+
+        2- Create a photosController which take a photo and upload it to Cloudinary.
+        3- delete photo from database and cloudinary
+        4- control if the user has the right access before changing anything in his profile!
+        5- rendering of customs entities (DTO's) instead of real entities to keep sensible data from leaking out
+        6- AutoMapper usage between  customs entities (DTO's) and persisted entities.
+        7- adding PhotosController for photos management
+
+-----------------------------------------------------------------------------
+Expanding register functionality
+-----------------------------------------------------------------------------
+1- receiving data from the form and expanding the register functionality:
+    expanding UserForRegisterDto and implement the approriate mapping with user business entity.
+2- after registration send CreatedAtRoute with UserForRegisterDto data.
+        a- send location header (url to the newly created user) as well as the resource we created 
+            (newly created user = userToReturn).
+        b- 'GetUser' method is in UsersController (another controller) we need to provide that value 
+            return CreatedAtRoute("GetUser", new { Controller="Users", id = userToCreate.Id }, userToReturn);
+
+
+-----------------------------------------------------------------------------
+Action filter : attribute that could apply to anything : class, method, etc
+-----------------------------------------------------------------------------
+1- create a LogUserActivity Helper class that implement IAsyncActionFiller
+2- add LogUserActivity as a service (ServiceFilter) to the startup class : services.AddScoped<LogUserActivity>()
+3- Decorate the UserController with [ServiceFilter(typeof(LogUserActivity))] ,
+   so the service will run after each actionResult method is completed in the UserController
+
+-----------------------------------------------------------------------------
+Pagination: http://localhost:5000/api/users?pageSize=2&PageNumber=6
+-----------------------------------------------------------------------------
+1 - we create a generic PagedList<T>: List<T> Helper class : all magic of differed quering 
+    is done here and run on DB side (not controller side) that to IQueryable interface.
+
+2 - we create a PaginationHeader to send a header info for our request
+
+3 - create AddPagination Extensions method for HttpResponse and add the PaginationHeader 
+    as Serializable Json stream into the request. we need also expose the header
+4- angular deal with camelcase format otherwise we get in the header:
+    Pagination →{"CurrentPage":1,"ItemsPerPage":3,"TotalItems":3,"TotalPages":4}
+    we will get : Pagination →{"currentPage":1,"itemsPerPage":3,"totalItems":3,"totalPages":4
+            var camelCaseFormatter = new JsonSerializerSettings();
+            camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader,camelCaseFormatter));
+
+-----------------------------------------------------------------------------
+Fitlering & pagination  & sorting
+-----------------------------------------------------------------------------
+- We pass all our userParams in the header (gender, minAge, maxAge, orderBy)
+- API receives an userParams object and pass it to the repository to get the relevant data
+
+
+-----------------------------------------------------------------------------
+like functionality : adding liker and likee entities
+-----------------------------------------------------------------------------
+1- EF fluent API (self referenced table): create a many to many relationship from users to users based on like entiry (likerId, LikeeId)
+2- create the entity (self referenced) : 
+     public class Like
+    {
+        public int LikerId { get; set; }
+        public int LikeeId { get; set; }
+        // e.g : a user (likee) could like many users 
+        // and could be liked by many other users (likers)
+        public User Likes { get; set; }
+        public User Liker { get; set; }        
+    }
+
+3- add navigation property to user entity : 
+        public ICollection<Like> Likers { get; set; }
+        public ICollection<Like> Likees { get; set; }
+
+4- Use EF fluent API OnModelCreating:
+        public DbSet<Like> Likes { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+                    //form the PK: LikerId + LikeeId
+                    modelBuilder.Entity<Like>()
+                    .HasKey(k => new {k.LikerId, k.LikeeId});
+
+                    //Liker could have many likees : 
+                    //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+                    modelBuilder.Entity<Like>()
+                    .HasOne(u => u.Liker)
+                    .WithMany(u => u.Likees)
+                    .HasForeignKey( f => f.LikerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                    //Likee could have many likers
+                    //e.g : a user (likee) could like many users and could be liked by many other users (likers)
+                    modelBuilder.Entity<Like>()
+                    .HasOne(u => u.Likee)
+                    .WithMany(u => u.Likers)
+                    .HasForeignKey(f => f.LikeeId)
+                    .OnDelete(DeleteBehavior.Restrict);
+                }
+
+5- add a post request IActionResult handler LikeUser
+
+-----------------------------------------------------------------------------
+Messages functionality
+-----------------------------------------------------------------------------
+1 - Create the proper entity Messages, do the EF (context & fluent API for relationship with the user)
+2 - Create MessageController with all IActionResult
+3 - Return paginated result 
+4 - Add new Messages
+5 - manage read/unread, inbox/outbox and thread(conversation) messages
+6-  chat functionality, mark as read messages
+
+
+-----------------------------------------------------------------------------
+Publishing the DatingApp :
+-----------------------------------------------------------------------------
+0- Seed only if there is no user in the DB
+1- config the distribution to point to API 'wwwroot' folder and use ng build, see 
+   the available options for optimization. Obviously ng build will create a big file (~4MB),
+   we need to optimize this. 
+   a- ng build --prod (= ng build --prod --build-optimizer=true) will allow ahead of time (aot vs JIT in dev mode) compilation, and since
+       the aot compilation is already done, the vendor.js (sizeable file which includes angular compiler)
+       will be needed no more!.  
+       minification + uglyfication (dead code algorithm -> unused/dead code removal) will implicitly take place       
+
+        I M P O R T A N T => - ng build includes : Bundling, minification, tree shaking (dead-code elimination),
+                             output hashing, AoT compilation. more info...: https://webpack.js.org/guides/       
+                             - JIT=ng serve (vs AoT) use in Dev mode will load the following output files in memory: 
+                                --------(DO NOT EXIST physically = just in memory)--------- 
+                                Date: 2018-10-07T10:08:03.160Z
+                                Hash: 50a7bde4436787d551d1
+                                Time: 8950ms
+                                chunk {main} main.js, main.js.map (main) 162 kB [initial] [rendered]
+                                chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 227 kB [initial] [rendered]
+                                chunk {runtime} runtime.js, runtime.js.map (runtime) 6.22 kB [entry] [rendered]
+                                chunk {scripts} scripts.js, scripts.js.map (scripts) 140 kB  [rendered]
+                                chunk {styles} styles.js, styles.js.map (styles) 353 kB [initial] [rendered]
+                                chunk {vendor} vendor.js, vendor.js.map (vendor) 4.89 MB [initial] 
+
+                            - AoT benefits : 
+                                    - faster rendering: no need to wait for compilation
+                                    - Few async requests: AoT compiler also inlines HTML templates and CSS files 
+                                                          and help reduce the amount of asynchronous requests sent by the application,
+                                                          so less async request, html/css templates are inline JS bundled directly into the app.
+                                    - smaller framework download size : no need to download the compiler (vendor.js) - app already compiled 
+                                    - detect template errors earlier
+                                    - better security: fewer opportunity injection attach, no css or html template to read.
+
+
+   b- ng build --prod will optimize the source code in such a way that it will affect alertify functionality,
+      that why we need to use  ng build --prod --build-optimizer=false
+   c- with ng build the name of the file is hashed (output hashing) which means it time a file content change the client 
+      is forced to get the lastest Version!!!    
+2-Order matters for serving SPA (static files) in startup.cs file
+    a-  app.UseDefaultFiles(); //look for html index (or asp, php, ....)
+    b-  app.UseStaticFiles();  //serve static file from wwwroot folder. 
+
+3- How to deal with the issue of refreshing SPA routed pages and prevent API to override the 
+   the SPA routing, basically we need to tell the API what should do with the unknow route!!!
+   a- we give  app.UseMvc() some route configuration and create a dedicated controller (Fallback) 
+   to deal with this:
+                app.UseMvc(routes => {
+                            routes.MapSpaFallbackRoute(
+                                    name: "spa-fallback",
+                                    defaults: new {
+                                        controller = "Fallback", //Controller name to use
+                                        action ="Index" //action method to call in the Fallback controller
+                                    }
+                                );
+                            });
+                
+                public class Fallback : Controller 
+                {
+                    IActionResult Index(){
+                        //return a physical full path filename : index.html
+                        return PhysicalFile(Path.Combine(Directory.GetCurrentDirectory(), 
+                        "wwwroot","index.html"),"text/HTML");
+                    }
+                }
+
+
+
+   b- those change imply that we need to restart kestrel server (dotnet watch run doesn't work!). 
+
+- 4 : we need to set 'environment.prod.ts' file
+            export const environment = {
+            production: true,
+            apiUrl: 'api/'
+            };
+
+- 5 : since we serving SPA from the same domaine we don't need to configure whitelistedDomains for JwtModule
+
+- 6: Solving EF the warning : when using 'includes' in DbContext and not returning the type that we suppose to return EF give this warning 
+    Here : we cause we do a count on the IQueryable before returning a PagedList<User> (see CreateAsync in PagedList class) 
+    The Include operation for navigation '[m].Recipient.Photos' is unnecessary and was ignored 
+    because the navigation is not reachable in the final query results. 
+    See https://docs.microsoft.com/en-us/ef/core/querying/related-data
+
+    services.AddDbContext<DataContext>(x => x.UseMySql(Configuration.GetConnectionString("DefaultConnection"))
+    .ConfigureWarnings(warnings => warnings.Ignore(CoreEventId.IncludeIgnoredWarning))); 
+
+7- dotnet ef migrations script -o datingApp-mysql.sql
+8- mysql operations:    
+    - create DDL for DB: dotnet ef migrations script -o datingApp-mysql.sql 
+    - create DB: mysql> Create database datingApp   
+    - run the script: mysql> source ./datingApp-mysql.sql
+
+
