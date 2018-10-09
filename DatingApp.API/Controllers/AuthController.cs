@@ -83,14 +83,14 @@ namespace DatingApp.API.Controllers
                 var userToReturn = _mapper.Map<UserForListDto>(appUser);
                 return Ok(new
                 {
-                    token = GetToken(user),
+                    token = GenerateJwtToken(user),
                     user = userToReturn
                 });
             }
             return Unauthorized();
         }
 
-        private async Task<string> GetToken(User user)
+        private async Task<string> GenerateJwtToken(User user)
         {
             //Start Token building
             //1- create a claims so that the server doesn't go to the DB to check for credentials: Id & username      

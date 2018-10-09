@@ -21,6 +21,7 @@ namespace DatingApp.API.Data
 
         public void SeedUser()
         {
+            //Don't add if users already exist!
             if (!_userManager.Users.Any())
             {
                 var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
@@ -58,7 +59,23 @@ namespace DatingApp.API.Data
                     //admin will be a type of user (unlike adminUser is a type of identity result!)
                     var admin = _userManager.FindByNameAsync("Admin").Result;
                     _userManager.AddToRolesAsync(admin,new [] {"Admin", "Moderator"}).Wait();
-                }                
+                }
+
+
+                //Add a dummy VIP user
+                //1- Create a VIP user
+                var vipUser  = new User() {
+                    UserName ="VipTest"
+                };
+
+                //2-Create the user as a Task (type IdentityResult)
+                result = _userManager.CreateAsync(vipUser,"password").Result;
+                if (result.Succeeded)
+                {
+                        //3-Get the newly created User (type user)
+                        var vip = _userManager.FindByNameAsync("VipTest").Result;
+                        _userManager.AddToRoleAsync(vip, "VIP");
+                }
             }
         }
     }

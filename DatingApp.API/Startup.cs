@@ -83,6 +83,15 @@ namespace DatingApp.API
             builderWrapper.AddRoleManager<RoleManager<Role>>();
             builderWrapper.AddSignInManager<SignInManager<User>>();
 
+            //instead of using no flexible policy such as [Authorize(Roles="Admin, Moderator")]
+            //we will use a more advanced and dynamic policies method
+            services.AddAuthorization(options => {
+                options.AddPolicy("RequiredAdminRole", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Moderator"));
+                options.AddPolicy("VipOnly", policy => policy.RequireRole("VIP"));
+            });
+
+
             //add Authorization service : We reorganize all authentications!!! order not important
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -135,6 +144,7 @@ namespace DatingApp.API
             //services.AddScoped<IAuthRepository, AuthResposity>();//created per request within the scope, a singleton within a scope itself
             /*Adding Dating repo as a DI service*/
             services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddScoped<IManageRoleRepository, DatingRepository>();
 
             
 

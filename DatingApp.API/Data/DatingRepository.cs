@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
-    public class DatingRepository : IDatingRepository
+    public class DatingRepository : IDatingRepository, IManageRoleRepository
     {
         private readonly DataContext _context;
 
@@ -140,6 +140,20 @@ namespace DatingApp.API.Data
                         m.SenderId == recipientId && m.RecipientId == userId && !m.RecipientDeleted
             ).ToListAsync();
             return messages;
+        }
+
+        public async Task<List<UserWithRole>> GetUserWithRoles()
+        {
+           return await (from  user in _context.Users orderby user.UserName
+                                    select new  UserWithRole () {
+                                        UserName = user.UserName,
+                                        Roles = (from userRole in user.UserRoles
+                                        join role in _context.Roles
+                                        on userRole.RoleId
+                                        equals role.Id
+                                        select role.Name                                        
+                                         ).ToArray()
+                                    }).ToListAsync();
         }
     }
 }
