@@ -64,4 +64,16 @@ export class AuthService {
     // console.log('logged out');
     this.alertify.message('logged out');
   }
+
+  roleMatch(allowRoles: string[]) {
+    let isMatch = false;
+    const userRoles = this.decodedToken.role as Array<string>;
+    allowRoles.forEach(role => {
+      if (userRoles.includes(role)) {
+        isMatch = true;
+        return;
+      }
+    });
+    return isMatch;
+  }
 }

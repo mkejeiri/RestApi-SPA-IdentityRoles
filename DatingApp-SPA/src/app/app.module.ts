@@ -41,6 +41,8 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -60,7 +62,9 @@ export function tokenGetter() {
         MemberEditComponent,
         PhotoEditorComponent,
         TimeAgoPipe,
-        MemberMessagesComponent
+        MemberMessagesComponent,
+        AdminPanelComponent,
+        HasRoleDirective
     ],
     imports: [
         BrowserModule,
