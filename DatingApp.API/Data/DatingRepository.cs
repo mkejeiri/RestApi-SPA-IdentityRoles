@@ -146,6 +146,7 @@ namespace DatingApp.API.Data
         {
            return await (from  user in _context.Users orderby user.UserName
                                     select new  UserWithRole () {
+                                        Id = user.Id,
                                         UserName = user.UserName,
                                         Roles = (from userRole in user.UserRoles
                                         join role in _context.Roles

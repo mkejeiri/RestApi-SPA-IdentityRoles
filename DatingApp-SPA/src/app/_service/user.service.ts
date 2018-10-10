@@ -129,5 +129,4 @@ export class UserService {
       .post<Message>(this.baseUrl + 'users/' + userId + '/messages/' + messageId + '/read', {})
       .subscribe();
   }
- 
 }

@@ -12,6 +12,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
 import { TimeAgoPipe } from 'time-ago-pipe';
 import { ButtonsModule } from 'ngx-bootstrap';
 import { PaginationModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap';
 
 
 
@@ -43,6 +44,10 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './_directives/hasRole.directive';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { AdminService } from './_service/admin.service';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -64,7 +69,10 @@ export function tokenGetter() {
         TimeAgoPipe,
         MemberMessagesComponent,
         AdminPanelComponent,
-        HasRoleDirective
+        HasRoleDirective,
+        PhotoManagementComponent,
+        UserManagementComponent,
+        RolesModalComponent
     ],
     imports: [
         BrowserModule,
@@ -85,7 +93,8 @@ export function tokenGetter() {
         ButtonsModule.forRoot(),
         TabsModule.forRoot(),
         FileUploadModule,
-        PaginationModule.forRoot()
+        PaginationModule.forRoot(),
+        ModalModule.forRoot()
     ],
     providers: [
         AuthService,
@@ -98,8 +107,12 @@ export function tokenGetter() {
         MemberEditResolver,
         LikeParamsResolver,
         PreventUnsavedChangesGuard,
-        MessagesResolver
+        MessagesResolver,
+        AdminService
 
+    ],
+    entryComponents: [
+        RolesModalComponent
     ],
     bootstrap: [
         AppComponent
