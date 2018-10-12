@@ -67,7 +67,8 @@ export class PhotoEditorComponent implements OnInit {
           description: res.description,
           dateAdded: res.dateAdded,
           isMain: res.isMain,
-          isApproved: res.isApproved
+          isApproved: res.isApproved,
+          userName: res.userName
         };
         if (photo.isMain) {
           this.authService.currentPhotoSubject.next(photo.url);

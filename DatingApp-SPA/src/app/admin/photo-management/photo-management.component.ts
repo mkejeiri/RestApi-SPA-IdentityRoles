@@ -14,29 +14,14 @@ export class PhotoManagementComponent implements OnInit {
     private alertify: AlertifyService) { }
 
   ngOnInit() {
-    console.log('"getPhotosForApproval"') ;
     this.adminService.getPhotosForApproval()
     .subscribe((data: Photo[])  => {
       this.photos = data;
-        console.log(data);
       }, (error) => {
-        console.log(error);
+        this.alertify.error(error);
       });
 
   }
-
-//   rejectPhoto(photoId: number) {
-//     return this.http.post(this.baseUrl + 'admin/rejectPhoto/' + photoId, {});
-//   }
-
-
-//   approvePhoto(photoId: number) {
-//     return this.http.post(this.baseUrl + 'admin/approvePhoto/'  + photoId, {});
-//   }
-// }
-
-
-
   approvePhoto(id: number) {
     this.adminService.approvePhoto(id)
       .subscribe(() => {

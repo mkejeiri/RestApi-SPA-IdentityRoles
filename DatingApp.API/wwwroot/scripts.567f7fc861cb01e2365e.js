@@ -1,1 +1,3598 @@
-!function(e){"use strict";var t={ENTER:13,ESC:27,F1:112,F12:123,LEFT:37,RIGHT:39},n={autoReset:!0,basic:!1,closable:!0,closableByDimmer:!0,frameless:!1,maintainFocus:!0,maximizable:!0,modal:!0,movable:!0,moveBounded:!1,overflow:!0,padding:!0,pinnable:!0,pinned:!0,preventBodyShift:!1,resizable:!0,startMaximized:!1,transition:"pulse",notifier:{delay:5,position:"bottom-right",closeButton:!1},glossary:{title:"AlertifyJS",ok:"OK",cancel:"Cancel",acccpt:"Accept",deny:"Deny",confirm:"Confirm",decline:"Decline",close:"Close",maximize:"Maximize",restore:"Restore"},theme:{input:"ajs-input",ok:"ajs-ok",cancel:"ajs-cancel"}},i=[];function s(e,t){e.className+=" "+t}function o(e,t){for(var n=e.className.split(" "),i=t.split(" "),s=0;s<i.length;s+=1){var o=n.indexOf(i[s]);o>-1&&n.splice(o,1)}e.className=n.join(" ")}function a(){return"rtl"===e.getComputedStyle(document.body).direction}function l(){return document.documentElement&&document.documentElement.scrollTop||document.body.scrollTop}function r(){return document.documentElement&&document.documentElement.scrollLeft||document.body.scrollLeft}function c(e){for(;e.lastChild;)e.removeChild(e.lastChild)}function d(e){if(null===e)return e;var t;if(Array.isArray(e)){t=[];for(var n=0;n<e.length;n+=1)t.push(d(e[n]));return t}if(e instanceof Date)return new Date(e.getTime());if(e instanceof RegExp)return(t=new RegExp(e.source)).global=e.global,t.ignoreCase=e.ignoreCase,t.multiline=e.multiline,t.lastIndex=e.lastIndex,t;if("object"==typeof e){for(var i in t={},e)e.hasOwnProperty(i)&&(t[i]=d(e[i]));return t}return e}function m(e,t){var n=e.elements.root;n.parentNode.removeChild(n),delete e.elements,e.settings=d(e.__settings),e.__init=t,delete e.__internal}var u=document.addEventListener?function(e,t,n,i){e.addEventListener(t,n,!0===i)}:document.attachEvent?function(e,t,n){e.attachEvent("on"+t,n)}:void 0,f=document.removeEventListener?function(e,t,n,i){e.removeEventListener(t,n,!0===i)}:document.detachEvent?function(e,t,n){e.detachEvent("on"+t,n)}:void 0,h=function(){var e,t,n=!1,i={animation:"animationend",OAnimation:"oAnimationEnd oanimationend",msAnimation:"MSAnimationEnd",MozAnimation:"animationend",WebkitAnimation:"webkitAnimationEnd"};for(e in i)if(void 0!==document.documentElement.style[e]){t=i[e],n=!0;break}return{type:t,supported:n}}();function p(e,t){return function(){if(arguments.length>0){for(var n=[],i=0;i<arguments.length;i+=1)n.push(arguments[i]);return n.push(e),t.apply(e,n)}return t.apply(e,[null,e])}}function b(e,t){return{index:e,button:t,cancel:!1}}function v(e,t){if("function"==typeof t.get(e))return t.get(e).call(t)}var g=function(){var n,g,y=[],x=!1,k=e.navigator.userAgent.indexOf("Safari")>-1&&e.navigator.userAgent.indexOf("Chrome")<0,H={dimmer:'<div class="ajs-dimmer"></div>',modal:'<div class="ajs-modal" tabindex="0"></div>',dialog:'<div class="ajs-dialog" tabindex="0"></div>',reset:'<button class="ajs-reset"></button>',commands:'<div class="ajs-commands"><button class="ajs-pin"></button><button class="ajs-maximize"></button><button class="ajs-close"></button></div>',header:'<div class="ajs-header"></div>',body:'<div class="ajs-body"></div>',content:'<div class="ajs-content"></div>',footer:'<div class="ajs-footer"></div>',buttons:{primary:'<div class="ajs-primary ajs-buttons"></div>',auxiliary:'<div class="ajs-auxiliary ajs-buttons"></div>'},button:'<button class="ajs-button"></button>',resizeHandle:'<div class="ajs-handle"></div>'},z={animationIn:"ajs-in",animationOut:"ajs-out",base:"alertify",basic:"ajs-basic",capture:"ajs-capture",closable:"ajs-closable",fixed:"ajs-fixed",frameless:"ajs-frameless",hidden:"ajs-hidden",maximize:"ajs-maximize",maximized:"ajs-maximized",maximizable:"ajs-maximizable",modeless:"ajs-modeless",movable:"ajs-movable",noSelection:"ajs-no-selection",noOverflow:"ajs-no-overflow",noPadding:"ajs-no-padding",pin:"ajs-pin",pinnable:"ajs-pinnable",prefix:"ajs-",resizable:"ajs-resizable",restore:"ajs-restore",shake:"ajs-shake",unpinned:"ajs-unpinned"};function T(e){if(!e.__internal){var t;delete e.__init,e.__settings||(e.__settings=d(e.settings)),"function"==typeof e.setup?((t=e.setup()).options=t.options||{},t.focus=t.focus||{}):t={buttons:[],focus:{element:null,select:!1},options:{}},"object"!=typeof e.hooks&&(e.hooks={});var n=[];if(Array.isArray(t.buttons))for(var i=0;i<t.buttons.length;i+=1){var o=t.buttons[i],a={};for(var l in o)o.hasOwnProperty(l)&&(a[l]=o[l]);n.push(a)}var r=e.__internal={isOpen:!1,activeElement:document.body,timerIn:void 0,timerOut:void 0,buttons:n,focus:t.focus,options:{title:void 0,modal:void 0,basic:void 0,frameless:void 0,pinned:void 0,movable:void 0,moveBounded:void 0,resizable:void 0,autoReset:void 0,closable:void 0,closableByDimmer:void 0,maximizable:void 0,startMaximized:void 0,pinnable:void 0,transition:void 0,padding:void 0,overflow:void 0,onshow:void 0,onclosing:void 0,onclose:void 0,onfocus:void 0,onmove:void 0,onmoved:void 0,onresize:void 0,onresized:void 0,onmaximize:void 0,onmaximized:void 0,onrestore:void 0,onrestored:void 0},resetHandler:void 0,beginMoveHandler:void 0,beginResizeHandler:void 0,bringToFrontHandler:void 0,modalClickHandler:void 0,buttonsClickHandler:void 0,commandsClickHandler:void 0,transitionInHandler:void 0,transitionOutHandler:void 0,destroy:void 0},c={};c.root=document.createElement("div"),c.root.className=z.base+" "+z.hidden+" ",c.root.innerHTML=H.dimmer+H.modal,c.dimmer=c.root.firstChild,c.modal=c.root.lastChild,c.modal.innerHTML=H.dialog,c.dialog=c.modal.firstChild,c.dialog.innerHTML=H.reset+H.commands+H.header+H.body+H.footer+H.resizeHandle+H.reset,c.reset=[],c.reset.push(c.dialog.firstChild),c.reset.push(c.dialog.lastChild),c.commands={},c.commands.container=c.reset[0].nextSibling,c.commands.pin=c.commands.container.firstChild,c.commands.maximize=c.commands.pin.nextSibling,c.commands.close=c.commands.maximize.nextSibling,c.header=c.commands.container.nextSibling,c.body=c.header.nextSibling,c.body.innerHTML=H.content,c.content=c.body.firstChild,c.footer=c.body.nextSibling,c.footer.innerHTML=H.buttons.auxiliary+H.buttons.primary,c.resizeHandle=c.footer.nextSibling,c.buttons={},c.buttons.auxiliary=c.footer.firstChild,c.buttons.primary=c.buttons.auxiliary.nextSibling,c.buttons.primary.innerHTML=H.button,c.buttonTemplate=c.buttons.primary.firstChild,c.buttons.primary.removeChild(c.buttonTemplate);for(var m=0;m<e.__internal.buttons.length;m+=1){var u=e.__internal.buttons[m];for(var f in y.indexOf(u.key)<0&&y.push(u.key),u.element=c.buttonTemplate.cloneNode(),u.element.innerHTML=u.text,"string"==typeof u.className&&""!==u.className&&s(u.element,u.className),u.attrs)"className"!==f&&u.attrs.hasOwnProperty(f)&&u.element.setAttribute(f,u.attrs[f]);"auxiliary"===u.scope?c.buttons.auxiliary.appendChild(u.element):c.buttons.primary.appendChild(u.element)}for(var h in e.elements=c,r.resetHandler=p(e,Q),r.beginMoveHandler=p(e,de),r.beginResizeHandler=p(e,ye),r.bringToFrontHandler=p(e,j),r.modalClickHandler=p(e,X),r.buttonsClickHandler=p(e,q),r.commandsClickHandler=p(e,A),r.transitionInHandler=p(e,Z),r.transitionOutHandler=p(e,$),r.options)void 0!==t.options[h]?e.set(h,t.options[h]):_.defaults.hasOwnProperty(h)?e.set(h,_.defaults[h]):"title"===h&&e.set(h,_.defaults.glossary[h]);"function"==typeof e.build&&e.build()}document.body.appendChild(e.elements.root)}function w(){e.scrollTo(n,g)}function C(){for(var e=0,t=0;t<i.length;t+=1){var n=i[t];(n.isModal()||n.isMaximized())&&(e+=1)}0===e&&document.body.className.indexOf(z.noOverflow)>=0?(o(document.body,z.noOverflow),M(!1)):e>0&&document.body.className.indexOf(z.noOverflow)<0&&(M(!0),s(document.body,z.noOverflow))}var O="",E=0;function M(t){_.defaults.preventBodyShift&&document.documentElement.scrollHeight>document.documentElement.clientHeight&&(t?(E=g,O=e.getComputedStyle(document.body).top,s(document.body,z.fixed),document.body.style.top=-g+"px"):(g=E,document.body.style.top=O,o(document.body,z.fixed),w()))}function j(e,t){for(var n=i.indexOf(t)+1;n<i.length;n+=1)if(i[n].isModal())return;return document.body.lastChild!==t.elements.root&&(document.body.appendChild(t.elements.root),i.splice(i.indexOf(t),1),i.push(t),V(t)),!1}function N(e,t,n,i){switch(t){case"title":e.setHeader(i);break;case"modal":!function(e){e.get("modal")?(o(e.elements.root,z.modeless),e.isOpen()&&(Te(e),D(e),C())):(s(e.elements.root,z.modeless),e.isOpen()&&(ze(e),D(e),C()))}(e);break;case"basic":!function(e){e.get("basic")?s(e.elements.root,z.basic):o(e.elements.root,z.basic)}(e);break;case"frameless":!function(e){e.get("frameless")?s(e.elements.root,z.frameless):o(e.elements.root,z.frameless)}(e);break;case"pinned":!function(e){e.get("pinned")?(o(e.elements.root,z.unpinned),e.isOpen()&&B(e)):(s(e.elements.root,z.unpinned),e.isOpen()&&!e.isModal()&&F(e))}(e);break;case"closable":!function(e){e.get("closable")?(s(e.elements.root,z.closable),function(e){u(e.elements.modal,"click",e.__internal.modalClickHandler)}(e)):(o(e.elements.root,z.closable),function(e){f(e.elements.modal,"click",e.__internal.modalClickHandler)}(e))}(e);break;case"maximizable":!function(e){e.get("maximizable")?s(e.elements.root,z.maximizable):o(e.elements.root,z.maximizable)}(e);break;case"pinnable":!function(e){e.get("pinnable")?s(e.elements.root,z.pinnable):o(e.elements.root,z.pinnable)}(e);break;case"movable":!function(e){e.get("movable")?(s(e.elements.root,z.movable),e.isOpen()&&we(e)):(fe(e),o(e.elements.root,z.movable),e.isOpen()&&Ce(e))}(e);break;case"resizable":!function(e){e.get("resizable")?(s(e.elements.root,z.resizable),e.isOpen()&&Oe(e)):(ke(e),o(e.elements.root,z.resizable),e.isOpen()&&Ee(e))}(e);break;case"padding":i?o(e.elements.root,z.noPadding):e.elements.root.className.indexOf(z.noPadding)<0&&s(e.elements.root,z.noPadding);break;case"overflow":i?o(e.elements.root,z.noOverflow):e.elements.root.className.indexOf(z.noOverflow)<0&&s(e.elements.root,z.noOverflow);break;case"transition":!function(e,t,n){"string"==typeof n&&o(e.elements.root,z.prefix+n),s(e.elements.root,z.prefix+t),e.elements.root.offsetWidth}(e,i,n)}"function"==typeof e.hooks.onupdate&&e.hooks.onupdate.call(e,t,n,i)}function L(e,t,n,i,s){var o,a={op:void 0,items:[]};if(void 0===s&&"string"==typeof i)a.op="get",t.hasOwnProperty(i)?(a.found=!0,a.value=t[i]):(a.found=!1,a.value=void 0);else if(a.op="set","object"==typeof i){var l=i;for(var r in l)t.hasOwnProperty(r)?(t[r]!==l[r]&&(o=t[r],t[r]=l[r],n.call(e,r,o,l[r])),a.items.push({key:r,value:l[r],found:!0})):a.items.push({key:r,value:l[r],found:!1})}else{if("string"!=typeof i)throw new Error("args must be a string or object");t.hasOwnProperty(i)?(t[i]!==s&&(o=t[i],t[i]=s,n.call(e,i,o,s)),a.items.push({key:i,value:s,found:!0})):a.items.push({key:i,value:s,found:!1})}return a}function I(e){var t;G(e,function(e){return t=!0===e.invokeOnClose}),!t&&e.isOpen()&&e.close()}function A(e,t){switch(e.srcElement||e.target){case t.elements.commands.pin:t.isPinned()?P(t):S(t);break;case t.elements.commands.maximize:t.isMaximized()?R(t):W(t);break;case t.elements.commands.close:I(t)}return!1}function S(e){e.set("pinned",!0)}function P(e){e.set("pinned",!1)}function W(e){v("onmaximize",e),s(e.elements.root,z.maximized),e.isOpen()&&C(),v("onmaximized",e)}function R(e){v("onrestore",e),o(e.elements.root,z.maximized),e.isOpen()&&C(),v("onrestored",e)}function F(e){var t=r();e.elements.modal.style.marginTop=l()+"px",e.elements.modal.style.marginLeft=t+"px",e.elements.modal.style.marginRight=-t+"px"}function B(e){var t=parseInt(e.elements.modal.style.marginTop,10),n=parseInt(e.elements.modal.style.marginLeft,10);if(e.elements.modal.style.marginTop="",e.elements.modal.style.marginLeft="",e.elements.modal.style.marginRight="",e.isOpen()){var i=0,s=0;""!==e.elements.dialog.style.top&&(i=parseInt(e.elements.dialog.style.top,10)),e.elements.dialog.style.top=i+(t-l())+"px",""!==e.elements.dialog.style.left&&(s=parseInt(e.elements.dialog.style.left,10)),e.elements.dialog.style.left=s+(n-r())+"px"}}function D(e){e.get("modal")||e.get("pinned")?B(e):F(e)}var U=!1;function X(e,t){var n=e.srcElement||e.target;return U||n!==t.elements.modal||!0!==t.get("closableByDimmer")||I(t),U=!1,!1}var Y=!1;function G(e,t){for(var n=0;n<e.__internal.buttons.length;n+=1){var i=e.__internal.buttons[n];if(!i.element.disabled&&t(i)){var s=b(n,i);"function"==typeof e.callback&&e.callback.apply(e,[s]),!1===s.cancel&&e.close();break}}}function q(e,t){var n=e.srcElement||e.target;G(t,function(e){return e.element===n&&(Y=!0)})}function J(e){if(!Y){var n=i[i.length-1],s=e.keyCode;return 0===n.__internal.buttons.length&&s===t.ESC&&!0===n.get("closable")?(I(n),!1):y.indexOf(s)>-1?(G(n,function(e){return e.key===s}),!1):void 0}Y=!1}function K(e){var n=i[i.length-1],s=e.keyCode;if(s===t.LEFT||s===t.RIGHT){for(var o=n.__internal.buttons,a=0;a<o.length;a+=1)if(document.activeElement===o[a].element)switch(s){case t.LEFT:return void o[(a||o.length)-1].element.focus();case t.RIGHT:return void o[(a+1)%o.length].element.focus()}}else if(s<t.F12+1&&s>t.F1-1&&y.indexOf(s)>-1)return e.preventDefault(),e.stopPropagation(),G(n,function(e){return e.key===s}),!1}function V(e,t){if(t)t.focus();else{var n=e.__internal.focus,i=n.element;switch(typeof n.element){case"number":e.__internal.buttons.length>n.element&&(i=!0===e.get("basic")?e.elements.reset[0]:e.__internal.buttons[n.element].element);break;case"string":i=e.elements.body.querySelector(n.element);break;case"function":i=n.element.call(e)}void 0!==i&&null!==i||0!==e.__internal.buttons.length||(i=e.elements.reset[0]),i&&i.focus&&(i.focus(),n.select&&i.select&&i.select())}}function Q(e,t){if(!t)for(var n=i.length-1;n>-1;n-=1)if(i[n].isModal()){t=i[n];break}if(t&&t.isModal()){var s,o=e.srcElement||e.target,a=o===t.elements.reset[1]||0===t.__internal.buttons.length&&o===document.body;a&&(t.get("maximizable")?s=t.elements.commands.maximize:t.get("closable")&&(s=t.elements.commands.close)),void 0===s&&("number"==typeof t.__internal.focus.element?o===t.elements.reset[0]?s=t.elements.buttons.auxiliary.firstChild||t.elements.buttons.primary.firstChild:a&&(s=t.elements.reset[0]):o===t.elements.reset[0]&&(s=t.elements.buttons.primary.lastChild||t.elements.buttons.auxiliary.lastChild)),V(t,s)}}function Z(e,t){clearTimeout(t.__internal.timerIn),V(t),w(),Y=!1,v("onfocus",t),f(t.elements.dialog,h.type,t.__internal.transitionInHandler),o(t.elements.root,z.animationIn)}function $(e,t){clearTimeout(t.__internal.timerOut),f(t.elements.dialog,h.type,t.__internal.transitionOutHandler),fe(t),ke(t),t.isMaximized()&&!t.get("startMaximized")&&R(t),_.defaults.maintainFocus&&t.__internal.activeElement&&(t.__internal.activeElement.focus(),t.__internal.activeElement=null),"function"==typeof t.__internal.destroy&&t.__internal.destroy.apply(t)}var ee=null,te=0,ne=0,ie="pageX",se="pageY",oe=null,ae=!1,le=null;function re(e,t){var n=e[ie]-te,i=e[se]-ne;ae&&(i-=document.body.scrollTop),t.style.left=n+"px",t.style.top=i+"px"}function ce(e,t){var n=e[ie]-te,i=e[se]-ne;ae&&(i-=document.body.scrollTop),t.style.left=Math.min(oe.maxLeft,Math.max(oe.minLeft,n))+"px",t.style.top=ae?Math.min(oe.maxTop,Math.max(oe.minTop,i))+"px":Math.max(oe.minTop,i)+"px"}function de(e,t){if(null===he&&!t.isMaximized()&&t.get("movable")){var n,i=0,o=0;if("touchstart"===e.type?(e.preventDefault(),n=e.targetTouches[0],ie="clientX",se="clientY"):0===e.button&&(n=e),n){var a=t.elements.dialog;if(s(a,z.capture),a.style.left&&(i=parseInt(a.style.left,10)),a.style.top&&(o=parseInt(a.style.top,10)),te=n[ie]-i,ne=n[se]-o,t.isModal()?ne+=t.elements.modal.scrollTop:t.isPinned()&&(ne-=document.body.scrollTop),t.get("moveBounded")){var l=a,r=-i,c=-o;do{r+=l.offsetLeft,c+=l.offsetTop}while(l=l.offsetParent);oe={maxLeft:r,minLeft:-r,maxTop:document.documentElement.clientHeight-a.clientHeight-c,minTop:-c},le=ce}else oe=null,le=re;return v("onmove",t),ae=!t.isModal()&&t.isPinned(),ee=t,le(n,a),s(document.body,z.noSelection),!1}}}function me(e){var t;ee&&("touchmove"===e.type?(e.preventDefault(),t=e.targetTouches[0]):0===e.button&&(t=e),t&&le(t,ee.elements.dialog))}function ue(){if(ee){var e=ee;ee=oe=null,o(document.body,z.noSelection),o(e.elements.dialog,z.capture),v("onmoved",e)}}function fe(e){ee=null;var t=e.elements.dialog;t.style.left=t.style.top=""}var he=null,pe=Number.Nan,be=0,ve=0,ge=0;function ye(e,t){var n;if(!t.isMaximized()&&("touchstart"===e.type?(e.preventDefault(),n=e.targetTouches[0]):0===e.button&&(n=e),n)){v("onresize",t),he=t,ge=t.elements.resizeHandle.offsetHeight/2;var i=t.elements.dialog;return s(i,z.capture),pe=parseInt(i.style.left,10),i.style.height=i.offsetHeight+"px",i.style.minHeight=t.elements.header.offsetHeight+t.elements.footer.offsetHeight+"px",i.style.width=(be=i.offsetWidth)+"px","none"!==i.style.maxWidth&&(i.style.minWidth=(ve=i.offsetWidth)+"px"),i.style.maxWidth="none",s(document.body,z.noSelection),!1}}function _e(e){var t;he&&("touchmove"===e.type?(e.preventDefault(),t=e.targetTouches[0]):0===e.button&&(t=e),t&&function(e,t,n){var i,s,o=t,l=0,r=0;do{l+=o.offsetLeft,r+=o.offsetTop}while(o=o.offsetParent);!0===n?(i=e.pageX,s=e.pageY):(i=e.clientX,s=e.clientY);var c=a();if(c&&(i=document.body.offsetWidth-i,isNaN(pe)||(l=document.body.offsetWidth-l-t.offsetWidth)),t.style.height=s-r+ge+"px",t.style.width=i-l+ge+"px",!isNaN(pe)){var d=.5*Math.abs(t.offsetWidth-be);c&&(d*=-1),t.offsetWidth>be?t.style.left=pe+d+"px":t.offsetWidth>=ve&&(t.style.left=pe-d+"px")}}(t,he.elements.dialog,!he.get("modal")&&!he.get("pinned")))}function xe(){if(he){var e=he;he=null,o(document.body,z.noSelection),o(e.elements.dialog,z.capture),U=!0,v("onresized",e)}}function ke(e){he=null;var t=e.elements.dialog;"none"===t.style.maxWidth&&(t.style.maxWidth=t.style.minWidth=t.style.width=t.style.height=t.style.minHeight=t.style.left="",pe=Number.Nan,be=ve=ge=0)}function He(){for(var e=0;e<i.length;e+=1){var t=i[e];t.get("autoReset")&&(fe(t),ke(t))}}function ze(e){u(e.elements.dialog,"focus",e.__internal.bringToFrontHandler,!0)}function Te(e){f(e.elements.dialog,"focus",e.__internal.bringToFrontHandler,!0)}function we(e){u(e.elements.header,"mousedown",e.__internal.beginMoveHandler),u(e.elements.header,"touchstart",e.__internal.beginMoveHandler)}function Ce(e){f(e.elements.header,"mousedown",e.__internal.beginMoveHandler),f(e.elements.header,"touchstart",e.__internal.beginMoveHandler)}function Oe(e){u(e.elements.resizeHandle,"mousedown",e.__internal.beginResizeHandler),u(e.elements.resizeHandle,"touchstart",e.__internal.beginResizeHandler)}function Ee(e){f(e.elements.resizeHandle,"mousedown",e.__internal.beginResizeHandler),f(e.elements.resizeHandle,"touchstart",e.__internal.beginResizeHandler)}return{__init:T,isOpen:function(){return this.__internal.isOpen},isModal:function(){return this.elements.root.className.indexOf(z.modeless)<0},isMaximized:function(){return this.elements.root.className.indexOf(z.maximized)>-1},isPinned:function(){return this.elements.root.className.indexOf(z.unpinned)<0},maximize:function(){return this.isMaximized()||W(this),this},restore:function(){return this.isMaximized()&&R(this),this},pin:function(){return this.isPinned()||S(this),this},unpin:function(){return this.isPinned()&&P(this),this},bringToFront:function(){return j(0,this),this},moveTo:function(e,t){if(!isNaN(e)&&!isNaN(t)){v("onmove",this);var n=this.elements.dialog,i=n,s=0,o=0;n.style.left&&(s-=parseInt(n.style.left,10)),n.style.top&&(o-=parseInt(n.style.top,10));do{s+=i.offsetLeft,o+=i.offsetTop}while(i=i.offsetParent);var l=e-s,r=t-o;a()&&(l*=-1),n.style.left=l+"px",n.style.top=r+"px",v("onmoved",this)}return this},resizeTo:function(e,t){var n=parseFloat(e),i=parseFloat(t),s=/(\d*\.\d+|\d+)%/;if(!isNaN(n)&&!isNaN(i)&&!0===this.get("resizable")){v("onresize",this),(""+e).match(s)&&(n=n/100*document.documentElement.clientWidth),(""+t).match(s)&&(i=i/100*document.documentElement.clientHeight);var o=this.elements.dialog;"none"!==o.style.maxWidth&&(o.style.minWidth=(ve=o.offsetWidth)+"px"),o.style.maxWidth="none",o.style.minHeight=this.elements.header.offsetHeight+this.elements.footer.offsetHeight+"px",o.style.width=n+"px",o.style.height=i+"px",v("onresized",this)}return this},setting:function(e,t){var n=this,i=L(this,this.__internal.options,function(e,t,i){N(n,e,t,i)},e,t);if("get"===i.op)return i.found?i.value:void 0!==this.settings?L(this,this.settings,this.settingUpdated||function(){},e,t).value:void 0;if("set"===i.op){if(i.items.length>0)for(var s=this.settingUpdated||function(){},o=0;o<i.items.length;o+=1){var a=i.items[o];a.found||void 0===this.settings||L(this,this.settings,s,a.key,a.value)}return this}},set:function(e,t){return this.setting(e,t),this},get:function(e){return this.setting(e)},setHeader:function(t){return"string"==typeof t?(c(this.elements.header),this.elements.header.innerHTML=t):t instanceof e.HTMLElement&&this.elements.header.firstChild!==t&&(c(this.elements.header),this.elements.header.appendChild(t)),this},setContent:function(t){return"string"==typeof t?(c(this.elements.content),this.elements.content.innerHTML=t):t instanceof e.HTMLElement&&this.elements.content.firstChild!==t&&(c(this.elements.content),this.elements.content.appendChild(t)),this},showModal:function(e){return this.show(!0,e)},show:function(t,a){if(T(this),this.__internal.isOpen){fe(this),ke(this),s(this.elements.dialog,z.shake);var c=this;setTimeout(function(){o(c.elements.dialog,z.shake)},200)}else{if(this.__internal.isOpen=!0,i.push(this),_.defaults.maintainFocus&&(this.__internal.activeElement=document.activeElement),document.body.hasAttribute("tabindex")||document.body.setAttribute("tabindex",x="0"),"function"==typeof this.prepare&&this.prepare(),m=this,1===i.length&&(u(e,"resize",He),u(document.body,"keyup",J),u(document.body,"keydown",K),u(document.body,"focus",Q),u(document.documentElement,"mousemove",me),u(document.documentElement,"touchmove",me),u(document.documentElement,"mouseup",ue),u(document.documentElement,"touchend",ue),u(document.documentElement,"mousemove",_e),u(document.documentElement,"touchmove",_e),u(document.documentElement,"mouseup",xe),u(document.documentElement,"touchend",xe)),u(m.elements.commands.container,"click",m.__internal.commandsClickHandler),u(m.elements.footer,"click",m.__internal.buttonsClickHandler),u(m.elements.reset[0],"focus",m.__internal.resetHandler),u(m.elements.reset[1],"focus",m.__internal.resetHandler),Y=!0,u(m.elements.dialog,h.type,m.__internal.transitionInHandler),m.get("modal")||ze(m),m.get("resizable")&&Oe(m),m.get("movable")&&we(m),void 0!==t&&this.set("modal",t),n=r(),g=l(),C(),"string"==typeof a&&""!==a&&(this.__internal.className=a,s(this.elements.root,a)),this.get("startMaximized")?this.maximize():this.isMaximized()&&R(this),D(this),o(this.elements.root,z.animationOut),s(this.elements.root,z.animationIn),clearTimeout(this.__internal.timerIn),this.__internal.timerIn=setTimeout(this.__internal.transitionInHandler,h.supported?1e3:100),k){var d=this.elements.root;d.style.display="none",setTimeout(function(){d.style.display="block"},0)}this.elements.root.offsetWidth,o(this.elements.root,z.hidden),"function"==typeof this.hooks.onshow&&this.hooks.onshow.call(this),v("onshow",this)}var m;return this},close:function(){var t;return this.__internal.isOpen&&!1!==v("onclosing",this)&&(t=this,1===i.length&&(f(e,"resize",He),f(document.body,"keyup",J),f(document.body,"keydown",K),f(document.body,"focus",Q),f(document.documentElement,"mousemove",me),f(document.documentElement,"mouseup",ue),f(document.documentElement,"mousemove",_e),f(document.documentElement,"mouseup",xe)),f(t.elements.commands.container,"click",t.__internal.commandsClickHandler),f(t.elements.footer,"click",t.__internal.buttonsClickHandler),f(t.elements.reset[0],"focus",t.__internal.resetHandler),f(t.elements.reset[1],"focus",t.__internal.resetHandler),u(t.elements.dialog,h.type,t.__internal.transitionOutHandler),t.get("modal")||Te(t),t.get("movable")&&Ce(t),t.get("resizable")&&Ee(t),o(this.elements.root,z.animationIn),s(this.elements.root,z.animationOut),clearTimeout(this.__internal.timerOut),this.__internal.timerOut=setTimeout(this.__internal.transitionOutHandler,h.supported?1e3:100),s(this.elements.root,z.hidden),this.elements.modal.offsetWidth,void 0!==this.__internal.className&&""!==this.__internal.className&&o(this.elements.root,this.__internal.className),"function"==typeof this.hooks.onclose&&this.hooks.onclose.call(this),v("onclose",this),i.splice(i.indexOf(this),1),this.__internal.isOpen=!1,C()),i.length||"0"!==x||document.body.removeAttribute("tabindex"),this},closeOthers:function(){return _.closeAll(this),this},destroy:function(){return this.__internal.isOpen?(this.__internal.destroy=function(){m(this,T)},this.close()):m(this,T),this}}}(),y=function(){var t,n=[],i={base:"alertify-notifier",message:"ajs-message",top:"ajs-top",right:"ajs-right",bottom:"ajs-bottom",left:"ajs-left",center:"ajs-center",visible:"ajs-visible",hidden:"ajs-hidden",close:"ajs-close"};function a(e){e.__internal||(e.__internal={position:_.defaults.notifier.position,delay:_.defaults.notifier.delay},t=document.createElement("DIV"),l(e)),t.parentNode!==document.body&&document.body.appendChild(t)}function l(e){switch(t.className=i.base,e.__internal.position){case"top-right":s(t,i.top+" "+i.right);break;case"top-left":s(t,i.top+" "+i.left);break;case"top-center":s(t,i.top+" "+i.center);break;case"bottom-left":s(t,i.bottom+" "+i.left);break;case"bottom-center":s(t,i.bottom+" "+i.center);break;default:case"bottom-right":s(t,i.bottom+" "+i.right)}}function r(a,l){function r(e,t){t.__internal.closeButton&&"true"!==e.target.getAttribute("data-close")||t.dismiss(!0)}function d(e,n){f(n.element,h.type,d),t.removeChild(n.element)}function m(e){clearTimeout(e.__internal.timer),clearTimeout(e.__internal.transitionTimeout)}return(b={element:a,push:function(e,o){if(!this.__internal.pushed){var a,l;switch((r=this).__internal.pushed=!0,n.push(r),m(this),arguments.length){case 0:l=this.__internal.delay;break;case 1:"number"==typeof e?l=e:(a=e,l=this.__internal.delay);break;case 2:a=e,l=o}return this.__internal.closeButton=_.defaults.notifier.closeButton,void 0!==a&&this.setContent(a),y.__internal.position.indexOf("top")<0?t.appendChild(this.element):t.insertBefore(this.element,t.firstChild),this.element.offsetWidth,s(this.element,i.visible),u(this.element,"click",this.__internal.clickHandler),this.delay(l)}var r;return this},ondismiss:function(){},callback:l,dismiss:function(e){var s;return this.__internal.pushed&&(m(this),"function"==typeof this.ondismiss&&!1===this.ondismiss.call(this)||(f(this.element,"click",this.__internal.clickHandler),void 0!==this.element&&this.element.parentNode===t&&(this.__internal.transitionTimeout=setTimeout(this.__internal.transitionEndHandler,h.supported?1e3:100),o(this.element,i.visible),"function"==typeof this.callback&&this.callback.call(this,e)),s=this,n.splice(n.indexOf(s),1),s.__internal.pushed=!1)),this},delay:function(e){if(m(this),this.__internal.delay=void 0===e||isNaN(+e)?y.__internal.delay:+e,this.__internal.delay>0){var t=this;this.__internal.timer=setTimeout(function(){t.dismiss()},1e3*this.__internal.delay)}return this},setContent:function(t){if("string"==typeof t?(c(this.element),this.element.innerHTML=t):t instanceof e.HTMLElement&&this.element.firstChild!==t&&(c(this.element),this.element.appendChild(t)),this.__internal.closeButton){var n=document.createElement("span");s(n,i.close),n.setAttribute("data-close",!0),this.element.appendChild(n)}return this},dismissOthers:function(){return y.dismissAll(this),this}}).__internal||(b.__internal={pushed:!1,delay:void 0,timer:void 0,clickHandler:void 0,transitionEndHandler:void 0,transitionTimeout:void 0},b.__internal.clickHandler=p(b,r),b.__internal.transitionEndHandler=p(b,d)),b;var b}return{setting:function(e,t){if(a(this),void 0===t)return this.__internal[e];switch(e){case"position":this.__internal.position=t,l(this);break;case"delay":this.__internal.delay=t}return this},set:function(e,t){return this.setting(e,t),this},get:function(e){return this.setting(e)},create:function(e,t){a(this);var n=document.createElement("div");return n.className=i.message+("string"==typeof e&&""!==e?" ajs-"+e:""),r(n,t)},dismissAll:function(e){for(var t=n.slice(0),i=0;i<t.length;i+=1){var s=t[i];void 0!==e&&e===s||s.dismiss()}}}}();var _=new function(){var e={};function t(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n]);return e}function s(t){var n=e[t].dialog;return n&&"function"==typeof n.__init&&n.__init(n),n}return{defaults:n,dialog:function(n,i,o,a){if("function"!=typeof i)return s(n);if(this.hasOwnProperty(n))throw new Error("alertify.dialog: name already exists");var l=function(n,i,s,o){var a={dialog:null,factory:i};return void 0!==o&&(a.factory=function(){return t(new e[o].factory,new i)}),s||(a.dialog=t(new a.factory,g)),e[n]=a}(n,i,o,a);this[n]=o?function(){if(0===arguments.length)return l.dialog;var e=t(new l.factory,g);return e&&"function"==typeof e.__init&&e.__init(e),e.main.apply(e,arguments),e.show.apply(e)}:function(){if(l.dialog&&"function"==typeof l.dialog.__init&&l.dialog.__init(l.dialog),0===arguments.length)return l.dialog;var e=l.dialog;return e.main.apply(l.dialog,arguments),e.show.apply(l.dialog)}},closeAll:function(e){for(var t=i.slice(0),n=0;n<t.length;n+=1){var s=t[n];void 0!==e&&e===s||s.close()}},setting:function(e,t,n){if("notifier"===e)return y.setting(t,n);var i=s(e);return i?i.setting(t,n):void 0},set:function(e,t,n){return this.setting(e,t,n)},get:function(e,t){return this.setting(e,t)},notify:function(e,t,n,i){return y.create(t,i).push(e,n)},message:function(e,t,n){return y.create(null,n).push(e,t)},success:function(e,t,n){return y.create("success",n).push(e,t)},error:function(e,t,n){return y.create("error",n).push(e,t)},warning:function(e,t,n){return y.create("warning",n).push(e,t)},dismissAll:function(){y.dismissAll()}}};_.dialog("alert",function(){return{main:function(e,t,n){var i,s,o;switch(arguments.length){case 1:s=e;break;case 2:"function"==typeof t?(s=e,o=t):(i=e,s=t);break;case 3:i=e,s=t,o=n}return this.set("title",i),this.set("message",s),this.set("onok",o),this},setup:function(){return{buttons:[{text:_.defaults.glossary.ok,key:t.ESC,invokeOnClose:!0,className:_.defaults.theme.ok}],focus:{element:0,select:!1},options:{maximizable:!1,resizable:!1}}},build:function(){},prepare:function(){},setMessage:function(e){this.setContent(e)},settings:{message:void 0,onok:void 0,label:void 0},settingUpdated:function(e,t,n){switch(e){case"message":this.setMessage(n);break;case"label":this.__internal.buttons[0].element&&(this.__internal.buttons[0].element.innerHTML=n)}},callback:function(e){if("function"==typeof this.get("onok")){var t=this.get("onok").call(this,e);void 0!==t&&(e.cancel=!t)}}}}),_.dialog("confirm",function(){var e={timer:null,index:null,text:null,duration:null,task:function(t,i){if(i.isOpen()){if(i.__internal.buttons[e.index].element.innerHTML=e.text+" (&#8207;"+e.duration+"&#8207;) ",e.duration-=1,-1===e.duration){n(i);var s=i.__internal.buttons[e.index],o=b(e.index,s);"function"==typeof i.callback&&i.callback.apply(i,[o]),!1!==o.close&&i.close()}}else n(i)}};function n(t){null!==e.timer&&(clearInterval(e.timer),e.timer=null,t.__internal.buttons[e.index].element.innerHTML=e.text)}function i(t,i,s){n(t),e.duration=s,e.index=i,e.text=t.__internal.buttons[i].element.innerHTML,e.timer=setInterval(p(t,e.task),1e3),e.task(null,t)}return{main:function(e,t,n,i){var s,o,a,l;switch(arguments.length){case 1:o=e;break;case 2:o=e,a=t;break;case 3:o=e,a=t,l=n;break;case 4:s=e,o=t,a=n,l=i}return this.set("title",s),this.set("message",o),this.set("onok",a),this.set("oncancel",l),this},setup:function(){return{buttons:[{text:_.defaults.glossary.ok,key:t.ENTER,className:_.defaults.theme.ok},{text:_.defaults.glossary.cancel,key:t.ESC,invokeOnClose:!0,className:_.defaults.theme.cancel}],focus:{element:0,select:!1},options:{maximizable:!1,resizable:!1}}},build:function(){},prepare:function(){},setMessage:function(e){this.setContent(e)},settings:{message:null,labels:null,onok:null,oncancel:null,defaultFocus:null,reverseButtons:null},settingUpdated:function(e,t,n){switch(e){case"message":this.setMessage(n);break;case"labels":"ok"in n&&this.__internal.buttons[0].element&&(this.__internal.buttons[0].text=n.ok,this.__internal.buttons[0].element.innerHTML=n.ok),"cancel"in n&&this.__internal.buttons[1].element&&(this.__internal.buttons[1].text=n.cancel,this.__internal.buttons[1].element.innerHTML=n.cancel);break;case"reverseButtons":!0===n?this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element):this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element);break;case"defaultFocus":this.__internal.focus.element="ok"===n?0:1}},callback:function(e){var t;switch(n(this),e.index){case 0:"function"==typeof this.get("onok")&&void 0!==(t=this.get("onok").call(this,e))&&(e.cancel=!t);break;case 1:"function"==typeof this.get("oncancel")&&void 0!==(t=this.get("oncancel").call(this,e))&&(e.cancel=!t)}},autoOk:function(e){return i(this,0,e),this},autoCancel:function(e){return i(this,1,e),this}}}),_.dialog("prompt",function(){var n=document.createElement("INPUT"),i=document.createElement("P");return{main:function(e,t,n,i,s){var o,a,l,r,c;switch(arguments.length){case 1:a=e;break;case 2:a=e,l=t;break;case 3:a=e,l=t,r=n;break;case 4:a=e,l=t,r=n,c=i;break;case 5:o=e,a=t,l=n,r=i,c=s}return this.set("title",o),this.set("message",a),this.set("value",l),this.set("onok",r),this.set("oncancel",c),this},setup:function(){return{buttons:[{text:_.defaults.glossary.ok,key:t.ENTER,className:_.defaults.theme.ok},{text:_.defaults.glossary.cancel,key:t.ESC,invokeOnClose:!0,className:_.defaults.theme.cancel}],focus:{element:n,select:!0},options:{maximizable:!1,resizable:!1}}},build:function(){n.className=_.defaults.theme.input,n.setAttribute("type","text"),n.value=this.get("value"),this.elements.content.appendChild(i),this.elements.content.appendChild(n)},prepare:function(){},setMessage:function(t){"string"==typeof t?(c(i),i.innerHTML=t):t instanceof e.HTMLElement&&i.firstChild!==t&&(c(i),i.appendChild(t))},settings:{message:void 0,labels:void 0,onok:void 0,oncancel:void 0,value:"",type:"text",reverseButtons:void 0},settingUpdated:function(e,t,i){switch(e){case"message":this.setMessage(i);break;case"value":n.value=i;break;case"type":switch(i){case"text":case"color":case"date":case"datetime-local":case"email":case"month":case"number":case"password":case"search":case"tel":case"time":case"week":n.type=i;break;default:n.type="text"}break;case"labels":i.ok&&this.__internal.buttons[0].element&&(this.__internal.buttons[0].element.innerHTML=i.ok),i.cancel&&this.__internal.buttons[1].element&&(this.__internal.buttons[1].element.innerHTML=i.cancel);break;case"reverseButtons":!0===i?this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element):this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element)}},callback:function(e){var t;switch(e.index){case 0:this.settings.value=n.value,"function"==typeof this.get("onok")&&void 0!==(t=this.get("onok").call(this,e,this.settings.value))&&(e.cancel=!t);break;case 1:"function"==typeof this.get("oncancel")&&void 0!==(t=this.get("oncancel").call(this,e))&&(e.cancel=!t),e.cancel||(n.value=this.settings.value)}}}}),"object"==typeof module&&"object"==typeof module.exports?module.exports=_:"function"==typeof define&&define.amd?define([],function(){return _}):e.alertify||(e.alertify=_)}("undefined"!=typeof window?window:this);
+/**
+ * alertifyjs 1.11.1 http://alertifyjs.com
+ * AlertifyJS is a javascript framework for developing pretty browser dialogs and notifications.
+ * Copyright 2018 Mohammad Younes <Mohammad@alertifyjs.com> (http://alertifyjs.com) 
+ * Licensed under GPL 3 <https://opensource.org/licenses/gpl-3.0>*/
+( function ( window ) {
+    'use strict';
+    
+    /**
+     * Keys enum
+     * @type {Object}
+     */
+    var keys = {
+        ENTER: 13,
+        ESC: 27,
+        F1: 112,
+        F12: 123,
+        LEFT: 37,
+        RIGHT: 39
+    };
+    /**
+     * Default options 
+     * @type {Object}
+     */
+    var defaults = {
+        autoReset:true,
+        basic:false,
+        closable:true,
+        closableByDimmer:true,
+        frameless:false,
+        maintainFocus:true, //global default not per instance, applies to all dialogs
+        maximizable:true,
+        modal:true,
+        movable:true,
+        moveBounded:false,
+        overflow:true,
+        padding: true,
+        pinnable:true,
+        pinned:true,
+        preventBodyShift:false, //global default not per instance, applies to all dialogs
+        resizable:true,
+        startMaximized:false,
+        transition:'pulse',
+        notifier:{
+            delay:5,
+            position:'bottom-right',
+            closeButton:false
+        },
+        glossary:{
+            title:'AlertifyJS',
+            ok: 'OK',
+            cancel: 'Cancel',
+            acccpt: 'Accept',
+            deny: 'Deny',
+            confirm: 'Confirm',
+            decline: 'Decline',
+            close: 'Close',
+            maximize: 'Maximize',
+            restore: 'Restore',
+        },
+        theme:{
+            input:'ajs-input',
+            ok:'ajs-ok',
+            cancel:'ajs-cancel',
+        }
+    };
+    
+    //holds open dialogs instances
+    var openDialogs = [];
+
+    /**
+     * [Helper]  Adds the specified class(es) to the element.
+     *
+     * @element {node}      The element
+     * @className {string}  One or more space-separated classes to be added to the class attribute of the element.
+     * 
+     * @return {undefined}
+     */
+    function addClass(element,classNames){
+        element.className += ' ' + classNames;
+    }
+    
+    /**
+     * [Helper]  Removes the specified class(es) from the element.
+     *
+     * @element {node}      The element
+     * @className {string}  One or more space-separated classes to be removed from the class attribute of the element.
+     * 
+     * @return {undefined}
+     */
+    function removeClass(element, classNames) {
+        var original = element.className.split(' ');
+        var toBeRemoved = classNames.split(' ');
+        for (var x = 0; x < toBeRemoved.length; x += 1) {
+            var index = original.indexOf(toBeRemoved[x]);
+            if (index > -1){
+                original.splice(index,1);
+            }
+        }
+        element.className = original.join(' ');
+    }
+
+    /**
+     * [Helper]  Checks if the document is RTL
+     *
+     * @return {Boolean} True if the document is RTL, false otherwise.
+     */
+    function isRightToLeft(){
+        return window.getComputedStyle(document.body).direction === 'rtl';
+    }
+    /**
+     * [Helper]  Get the document current scrollTop
+     *
+     * @return {Number} current document scrollTop value
+     */
+    function getScrollTop(){
+        return ((document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop);
+    }
+
+    /**
+     * [Helper]  Get the document current scrollLeft
+     *
+     * @return {Number} current document scrollLeft value
+     */
+    function getScrollLeft(){
+        return ((document.documentElement && document.documentElement.scrollLeft) || document.body.scrollLeft);
+    }
+
+    /**
+    * Helper: clear contents
+    *
+    */
+    function clearContents(element){
+        while (element.lastChild) {
+            element.removeChild(element.lastChild);
+        }
+    }
+    /**
+     * Extends a given prototype by merging properties from base into sub.
+     *
+     * @sub {Object} sub The prototype being overwritten.
+     * @base {Object} base The prototype being written.
+     *
+     * @return {Object} The extended prototype.
+     */
+    function copy(src) {
+        if(null === src){
+            return src;
+        }
+        var cpy;
+        if(Array.isArray(src)){
+            cpy = [];
+            for(var x=0;x<src.length;x+=1){
+                cpy.push(copy(src[x]));
+            }
+            return cpy;
+        }
+      
+        if(src instanceof Date){
+            return new Date(src.getTime());
+        }
+      
+        if(src instanceof RegExp){
+            cpy = new RegExp(src.source);
+            cpy.global = src.global;
+            cpy.ignoreCase = src.ignoreCase;
+            cpy.multiline = src.multiline;
+            cpy.lastIndex = src.lastIndex;
+            return cpy;
+        }
+        
+        if(typeof src === 'object'){
+            cpy = {};
+            // copy dialog pototype over definition.
+            for (var prop in src) {
+                if (src.hasOwnProperty(prop)) {
+                    cpy[prop] = copy(src[prop]);
+                }
+            }
+            return cpy;
+        }
+        return src;
+    }
+    /**
+      * Helper: destruct the dialog
+      *
+      */
+    function destruct(instance, initialize){
+        //delete the dom and it's references.
+        var root = instance.elements.root;
+        root.parentNode.removeChild(root);
+        delete instance.elements;
+        //copy back initial settings.
+        instance.settings = copy(instance.__settings);
+        //re-reference init function.
+        instance.__init = initialize;
+        //delete __internal variable to allow re-initialization.
+        delete instance.__internal;
+    }
+
+    /**
+     * Use a closure to return proper event listener method. Try to use
+     * `addEventListener` by default but fallback to `attachEvent` for
+     * unsupported browser. The closure simply ensures that the test doesn't
+     * happen every time the method is called.
+     *
+     * @param    {Node}     el    Node element
+     * @param    {String}   event Event type
+     * @param    {Function} fn    Callback of event
+     * @return   {Function}
+     */
+    var on = (function () {
+        if (document.addEventListener) {
+            return function (el, event, fn, useCapture) {
+                el.addEventListener(event, fn, useCapture === true);
+            };
+        } else if (document.attachEvent) {
+            return function (el, event, fn) {
+                el.attachEvent('on' + event, fn);
+            };
+        }
+    }());
+
+    /**
+     * Use a closure to return proper event listener method. Try to use
+     * `removeEventListener` by default but fallback to `detachEvent` for
+     * unsupported browser. The closure simply ensures that the test doesn't
+     * happen every time the method is called.
+     *
+     * @param    {Node}     el    Node element
+     * @param    {String}   event Event type
+     * @param    {Function} fn    Callback of event
+     * @return   {Function}
+     */
+    var off = (function () {
+        if (document.removeEventListener) {
+            return function (el, event, fn, useCapture) {
+                el.removeEventListener(event, fn, useCapture === true);
+            };
+        } else if (document.detachEvent) {
+            return function (el, event, fn) {
+                el.detachEvent('on' + event, fn);
+            };
+        }
+    }());
+
+    /**
+     * Prevent default event from firing
+     *
+     * @param  {Event} event Event object
+     * @return {undefined}
+
+    function prevent ( event ) {
+        if ( event ) {
+            if ( event.preventDefault ) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
+        }
+    }
+    */
+    var transition = (function () {
+        var t, type;
+        var supported = false;
+        var transitions = {
+            'animation'        : 'animationend',
+            'OAnimation'       : 'oAnimationEnd oanimationend',
+            'msAnimation'      : 'MSAnimationEnd',
+            'MozAnimation'     : 'animationend',
+            'WebkitAnimation'  : 'webkitAnimationEnd'
+        };
+
+        for (t in transitions) {
+            if (document.documentElement.style[t] !== undefined) {
+                type = transitions[t];
+                supported = true;
+                break;
+            }
+        }
+
+        return {
+            type: type,
+            supported: supported
+        };
+    }());
+
+    /**
+    * Creates event handler delegate that sends the instance as last argument.
+    * 
+    * @return {Function}    a function wrapper which sends the instance as last argument.
+    */
+    function delegate(context, method) {
+        return function () {
+            if (arguments.length > 0) {
+                var args = [];
+                for (var x = 0; x < arguments.length; x += 1) {
+                    args.push(arguments[x]);
+                }
+                args.push(context);
+                return method.apply(context, args);
+            }
+            return method.apply(context, [null, context]);
+        };
+    }
+    /**
+    * Helper for creating a dialog close event.
+    * 
+    * @return {object}
+    */
+    function createCloseEvent(index, button) {
+        return {
+            index: index,
+            button: button,
+            cancel: false
+        };
+    }
+    /**
+    * Helper for dispatching events.
+    *
+    * @param  {string} evenType The type of the event to disptach.
+    * @param  {object} instance The dialog instance disptaching the event.
+    *
+    * @return   {any}   The result of the invoked function.
+    */
+    function dispatchEvent(eventType, instance) {
+        if ( typeof instance.get(eventType) === 'function' ) {
+            return instance.get(eventType).call(instance);
+        }
+    }
+
+
+    /**
+     * Super class for all dialogs
+     *
+     * @return {Object}		base dialog prototype
+     */
+    var dialog = (function () {
+        var //holds the list of used keys.
+            usedKeys = [],
+            //dummy variable, used to trigger dom reflow.
+            reflow = null,
+            //holds body tab index in case it has any.
+            tabindex = false,
+            //condition for detecting safari
+            isSafari = window.navigator.userAgent.indexOf('Safari') > -1 && window.navigator.userAgent.indexOf('Chrome') < 0,
+            //dialog building blocks
+            templates = {
+                dimmer:'<div class="ajs-dimmer"></div>',
+                /*tab index required to fire click event before body focus*/
+                modal: '<div class="ajs-modal" tabindex="0"></div>',
+                dialog: '<div class="ajs-dialog" tabindex="0"></div>',
+                reset: '<button class="ajs-reset"></button>',
+                commands: '<div class="ajs-commands"><button class="ajs-pin"></button><button class="ajs-maximize"></button><button class="ajs-close"></button></div>',
+                header: '<div class="ajs-header"></div>',
+                body: '<div class="ajs-body"></div>',
+                content: '<div class="ajs-content"></div>',
+                footer: '<div class="ajs-footer"></div>',
+                buttons: { primary: '<div class="ajs-primary ajs-buttons"></div>', auxiliary: '<div class="ajs-auxiliary ajs-buttons"></div>' },
+                button: '<button class="ajs-button"></button>',
+                resizeHandle: '<div class="ajs-handle"></div>',
+            },
+            //common class names
+            classes = {
+                animationIn: 'ajs-in',
+                animationOut: 'ajs-out',
+                base: 'alertify',
+                basic:'ajs-basic',
+                capture: 'ajs-capture',
+                closable:'ajs-closable',
+                fixed: 'ajs-fixed',
+                frameless:'ajs-frameless',
+                hidden: 'ajs-hidden',
+                maximize: 'ajs-maximize',
+                maximized: 'ajs-maximized',
+                maximizable:'ajs-maximizable',
+                modeless: 'ajs-modeless',
+                movable: 'ajs-movable',
+                noSelection: 'ajs-no-selection',
+                noOverflow: 'ajs-no-overflow',
+                noPadding:'ajs-no-padding',
+                pin:'ajs-pin',
+                pinnable:'ajs-pinnable',
+                prefix: 'ajs-',
+                resizable: 'ajs-resizable',
+                restore: 'ajs-restore',
+                shake:'ajs-shake',
+                unpinned:'ajs-unpinned',
+            };
+
+        /**
+         * Helper: initializes the dialog instance
+         * 
+         * @return	{Number}	The total count of currently open modals.
+         */
+        function initialize(instance){
+            
+            if(!instance.__internal){
+
+                //no need to expose init after this.
+                delete instance.__init;
+              
+                //keep a copy of initial dialog settings
+                if(!instance.__settings){
+                    instance.__settings = copy(instance.settings);
+                }
+                
+                //get dialog buttons/focus setup
+                var setup;
+                if(typeof instance.setup === 'function'){
+                    setup = instance.setup();
+                    setup.options = setup.options  || {};
+                    setup.focus = setup.focus  || {};
+                }else{
+                    setup = {
+                        buttons:[],
+                        focus:{
+                            element:null,
+                            select:false
+                        },
+                        options:{
+                        }
+                    };
+                }
+                
+                //initialize hooks object.
+                if(typeof instance.hooks !== 'object'){
+                    instance.hooks = {};
+                }
+
+                //copy buttons defintion
+                var buttonsDefinition = [];
+                if(Array.isArray(setup.buttons)){
+                    for(var b=0;b<setup.buttons.length;b+=1){
+                        var ref  = setup.buttons[b],
+                            cpy = {};
+                        for (var i in ref) {
+                            if (ref.hasOwnProperty(i)) {
+                                cpy[i] = ref[i];
+                            }
+                        }
+                        buttonsDefinition.push(cpy);
+                    }
+                }
+
+                var internal = instance.__internal = {
+                    /**
+                     * Flag holding the open state of the dialog
+                     * 
+                     * @type {Boolean}
+                     */
+                    isOpen:false,
+                    /**
+                     * Active element is the element that will receive focus after
+                     * closing the dialog. It defaults as the body tag, but gets updated
+                     * to the last focused element before the dialog was opened.
+                     *
+                     * @type {Node}
+                     */
+                    activeElement:document.body,
+                    timerIn:undefined,
+                    timerOut:undefined,
+                    buttons: buttonsDefinition,
+                    focus: setup.focus,
+                    options: {
+                        title: undefined,
+                        modal: undefined,
+                        basic:undefined,
+                        frameless:undefined,
+                        pinned: undefined,
+                        movable: undefined,
+                        moveBounded:undefined,
+                        resizable: undefined,
+                        autoReset: undefined,
+                        closable: undefined,
+                        closableByDimmer: undefined,
+                        maximizable: undefined,
+                        startMaximized: undefined,
+                        pinnable: undefined,
+                        transition: undefined,
+                        padding:undefined,
+                        overflow:undefined,
+                        onshow:undefined,
+                        onclosing:undefined,
+                        onclose:undefined,
+                        onfocus:undefined,
+                        onmove:undefined,
+                        onmoved:undefined,
+                        onresize:undefined,
+                        onresized:undefined,
+                        onmaximize:undefined,
+                        onmaximized:undefined,
+                        onrestore:undefined,
+                        onrestored:undefined
+                    },
+                    resetHandler:undefined,
+                    beginMoveHandler:undefined,
+                    beginResizeHandler:undefined,
+                    bringToFrontHandler:undefined,
+                    modalClickHandler:undefined,
+                    buttonsClickHandler:undefined,
+                    commandsClickHandler:undefined,
+                    transitionInHandler:undefined,
+                    transitionOutHandler:undefined,
+                    destroy:undefined
+                };
+
+                var elements = {};
+                //root node
+                elements.root = document.createElement('div');
+                
+                elements.root.className = classes.base + ' ' + classes.hidden + ' ';
+
+                elements.root.innerHTML = templates.dimmer + templates.modal;
+                
+                //dimmer
+                elements.dimmer = elements.root.firstChild;
+
+                //dialog
+                elements.modal = elements.root.lastChild;
+                elements.modal.innerHTML = templates.dialog;
+                elements.dialog = elements.modal.firstChild;
+                elements.dialog.innerHTML = templates.reset + templates.commands + templates.header + templates.body + templates.footer + templates.resizeHandle + templates.reset;
+
+                //reset links
+                elements.reset = [];
+                elements.reset.push(elements.dialog.firstChild);
+                elements.reset.push(elements.dialog.lastChild);
+                
+                //commands
+                elements.commands = {};
+                elements.commands.container = elements.reset[0].nextSibling;
+                elements.commands.pin = elements.commands.container.firstChild;
+                elements.commands.maximize = elements.commands.pin.nextSibling;
+                elements.commands.close = elements.commands.maximize.nextSibling;
+                
+                //header
+                elements.header = elements.commands.container.nextSibling;
+
+                //body
+                elements.body = elements.header.nextSibling;
+                elements.body.innerHTML = templates.content;
+                elements.content = elements.body.firstChild;
+
+                //footer
+                elements.footer = elements.body.nextSibling;
+                elements.footer.innerHTML = templates.buttons.auxiliary + templates.buttons.primary;
+                
+                //resize handle
+                elements.resizeHandle = elements.footer.nextSibling;
+
+                //buttons
+                elements.buttons = {};
+                elements.buttons.auxiliary = elements.footer.firstChild;
+                elements.buttons.primary = elements.buttons.auxiliary.nextSibling;
+                elements.buttons.primary.innerHTML = templates.button;
+                elements.buttonTemplate = elements.buttons.primary.firstChild;
+                //remove button template
+                elements.buttons.primary.removeChild(elements.buttonTemplate);
+                               
+                for(var x=0; x < instance.__internal.buttons.length; x+=1) {
+                    var button = instance.__internal.buttons[x];
+                    
+                    // add to the list of used keys.
+                    if(usedKeys.indexOf(button.key) < 0){
+                        usedKeys.push(button.key);
+                    }
+
+                    button.element = elements.buttonTemplate.cloneNode();
+                    button.element.innerHTML = button.text;
+                    if(typeof button.className === 'string' &&  button.className !== ''){
+                        addClass(button.element, button.className);
+                    }
+                    for(var key in button.attrs){
+                        if(key !== 'className' && button.attrs.hasOwnProperty(key)){
+                            button.element.setAttribute(key, button.attrs[key]);
+                        }
+                    }
+                    if(button.scope === 'auxiliary'){
+                        elements.buttons.auxiliary.appendChild(button.element);
+                    }else{
+                        elements.buttons.primary.appendChild(button.element);
+                    }
+                }
+                //make elements pubic
+                instance.elements = elements;
+                
+                //save event handlers delegates
+                internal.resetHandler = delegate(instance, onReset);
+                internal.beginMoveHandler = delegate(instance, beginMove);
+                internal.beginResizeHandler = delegate(instance, beginResize);
+                internal.bringToFrontHandler = delegate(instance, bringToFront);
+                internal.modalClickHandler = delegate(instance, modalClickHandler);
+                internal.buttonsClickHandler = delegate(instance, buttonsClickHandler);
+                internal.commandsClickHandler = delegate(instance, commandsClickHandler);
+                internal.transitionInHandler = delegate(instance, handleTransitionInEvent);
+                internal.transitionOutHandler = delegate(instance, handleTransitionOutEvent);
+
+                //settings
+                for(var opKey in internal.options){
+                    if(setup.options[opKey] !== undefined){
+                        // if found in user options
+                        instance.set(opKey, setup.options[opKey]);
+                    }else if(alertify.defaults.hasOwnProperty(opKey)) {
+                        // else if found in defaults options
+                        instance.set(opKey, alertify.defaults[opKey]);
+                    }else if(opKey === 'title' ) {
+                        // else if title key, use alertify.defaults.glossary
+                        instance.set(opKey, alertify.defaults.glossary[opKey]);
+                    }
+                }
+
+                // allow dom customization
+                if(typeof instance.build === 'function'){
+                    instance.build();
+                }
+            }
+            
+            //add to the end of the DOM tree.
+            document.body.appendChild(instance.elements.root);
+        }
+
+        /**
+         * Helper: maintains scroll position
+         *
+         */
+        var scrollX, scrollY;
+        function saveScrollPosition(){
+            scrollX = getScrollLeft();
+            scrollY = getScrollTop();
+        }
+        function restoreScrollPosition(){
+            window.scrollTo(scrollX, scrollY);
+        }
+
+        /**
+         * Helper: adds/removes no-overflow class from body
+         *
+         */
+        function ensureNoOverflow(){
+            var requiresNoOverflow = 0;
+            for(var x=0;x<openDialogs.length;x+=1){
+                var instance = openDialogs[x];
+                if(instance.isModal() || instance.isMaximized()){
+                    requiresNoOverflow+=1;
+                }
+            }
+            if(requiresNoOverflow === 0 && document.body.className.indexOf(classes.noOverflow) >= 0){
+                //last open modal or last maximized one
+                removeClass(document.body, classes.noOverflow);
+                preventBodyShift(false);
+            }else if(requiresNoOverflow > 0 && document.body.className.indexOf(classes.noOverflow) < 0){
+                //first open modal or first maximized one
+                preventBodyShift(true);
+                addClass(document.body, classes.noOverflow);
+            }
+        }
+        var top = '', topScroll = 0;
+        /**
+         * Helper: prevents body shift.
+         *
+         */
+        function preventBodyShift(add){
+            if(alertify.defaults.preventBodyShift && document.documentElement.scrollHeight > document.documentElement.clientHeight){
+                if(add ){//&& openDialogs[openDialogs.length-1].elements.dialog.clientHeight <= document.documentElement.clientHeight){
+                    topScroll = scrollY;
+                    top = window.getComputedStyle(document.body).top;
+                    addClass(document.body, classes.fixed);
+                    document.body.style.top = -scrollY + 'px';
+                } else {
+                    scrollY = topScroll;
+                    document.body.style.top = top;
+                    removeClass(document.body, classes.fixed);
+                    restoreScrollPosition();
+                }
+            }
+        }
+		
+        /**
+         * Sets the name of the transition used to show/hide the dialog
+         * 
+         * @param {Object} instance The dilog instance.
+         *
+         */
+        function updateTransition(instance, value, oldValue){
+            if(typeof oldValue === 'string'){
+                removeClass(instance.elements.root,classes.prefix +  oldValue);
+            }
+            addClass(instance.elements.root, classes.prefix + value);
+            reflow = instance.elements.root.offsetWidth;
+        }
+		
+        /**
+         * Toggles the dialog display mode
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function updateDisplayMode(instance){
+            if(instance.get('modal')){
+
+                //make modal
+                removeClass(instance.elements.root, classes.modeless);
+
+                //only if open
+                if(instance.isOpen()){
+                    unbindModelessEvents(instance);
+
+                    //in case a pinned modless dialog was made modal while open.
+                    updateAbsPositionFix(instance);
+
+                    ensureNoOverflow();
+                }
+            }else{
+                //make modelss
+                addClass(instance.elements.root, classes.modeless);
+
+                //only if open
+                if(instance.isOpen()){
+                    bindModelessEvents(instance);
+
+                    //in case pin/unpin was called while a modal is open
+                    updateAbsPositionFix(instance);
+
+                    ensureNoOverflow();
+                }
+            }
+        }
+
+        /**
+         * Toggles the dialog basic view mode 
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function updateBasicMode(instance){
+            if (instance.get('basic')) {
+                // add class
+                addClass(instance.elements.root, classes.basic);
+            } else {
+                // remove class
+                removeClass(instance.elements.root, classes.basic);
+            }
+        }
+
+        /**
+         * Toggles the dialog frameless view mode 
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function updateFramelessMode(instance){
+            if (instance.get('frameless')) {
+                // add class
+                addClass(instance.elements.root, classes.frameless);
+            } else {
+                // remove class
+                removeClass(instance.elements.root, classes.frameless);
+            }
+        }
+		
+        /**
+         * Helper: Brings the modeless dialog to front, attached to modeless dialogs.
+         *
+         * @param {Event} event Focus event
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bringToFront(event, instance){
+            
+            // Do not bring to front if preceeded by an open modal
+            var index = openDialogs.indexOf(instance);
+            for(var x=index+1;x<openDialogs.length;x+=1){
+                if(openDialogs[x].isModal()){
+                    return;
+                }
+            }
+			
+            // Bring to front by making it the last child.
+            if(document.body.lastChild !== instance.elements.root){
+                document.body.appendChild(instance.elements.root);
+                //also make sure its at the end of the list
+                openDialogs.splice(openDialogs.indexOf(instance),1);
+                openDialogs.push(instance);
+                setFocus(instance);
+            }
+			
+            return false;
+        }
+		
+        /**
+         * Helper: reflects dialogs options updates
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {String} option The updated option name.
+         *
+         * @return	{undefined}	
+         */
+        function optionUpdated(instance, option, oldValue, newValue){
+            switch(option){
+            case 'title':
+                instance.setHeader(newValue);
+                break;
+            case 'modal':
+                updateDisplayMode(instance);
+                break;
+            case 'basic':
+                updateBasicMode(instance);
+                break;
+            case 'frameless':
+                updateFramelessMode(instance);
+                break;
+            case 'pinned':
+                updatePinned(instance);
+                break;
+            case 'closable':
+                updateClosable(instance);
+                break;
+            case 'maximizable':
+                updateMaximizable(instance);
+                break;
+            case 'pinnable':
+                updatePinnable(instance);
+                break;
+            case 'movable':
+                updateMovable(instance);
+                break;
+            case 'resizable':
+                updateResizable(instance);
+                break;
+            case 'padding':
+                if(newValue){
+                    removeClass(instance.elements.root, classes.noPadding);
+                }else if(instance.elements.root.className.indexOf(classes.noPadding) < 0){
+                    addClass(instance.elements.root, classes.noPadding);
+                }
+                break;
+            case 'overflow':
+                if(newValue){
+                    removeClass(instance.elements.root, classes.noOverflow);
+                }else if(instance.elements.root.className.indexOf(classes.noOverflow) < 0){
+                    addClass(instance.elements.root, classes.noOverflow);
+                }
+                break;
+            case 'transition':
+                updateTransition(instance,newValue, oldValue);
+                break;
+            }
+
+            // internal on option updated event
+            if(typeof instance.hooks.onupdate === 'function'){
+                instance.hooks.onupdate.call(instance, option, oldValue, newValue);
+            }
+        }
+		
+        /**
+         * Helper: reflects dialogs options updates
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Object} obj The object to set/get a value on/from.
+         * @param {Function} callback The callback function to call if the key was found.
+         * @param {String|Object} key A string specifying a propery name or a collection of key value pairs.
+         * @param {Object} value Optional, the value associated with the key (in case it was a string).
+         * @param {String} option The updated option name.
+         *
+         * @return	{Object} result object 
+         *	The result objects has an 'op' property, indicating of this is a SET or GET operation.
+         *		GET: 
+         *		- found: a flag indicating if the key was found or not.
+         *		- value: the property value.
+         *		SET:
+         *		- items: a list of key value pairs of the properties being set.
+         *				each contains:
+         *					- found: a flag indicating if the key was found or not.
+         *					- key: the property key.
+         *					- value: the property value.
+         */
+        function update(instance, obj, callback, key, value){
+            var result = {op:undefined, items: [] };
+            if(typeof value === 'undefined' && typeof key === 'string') {
+                //get
+                result.op = 'get';
+                if(obj.hasOwnProperty(key)){
+                    result.found = true;
+                    result.value = obj[key];
+                }else{
+                    result.found = false;
+                    result.value = undefined;
+                }
+            }
+            else
+            {
+                var old;
+                //set
+                result.op = 'set';
+                if(typeof key === 'object'){
+                    //set multiple
+                    var args = key;
+                    for (var prop in args) {
+                        if (obj.hasOwnProperty(prop)) {
+                            if(obj[prop] !== args[prop]){
+                                old = obj[prop];
+                                obj[prop] = args[prop];
+                                callback.call(instance,prop, old, args[prop]);
+                            }
+                            result.items.push({ 'key': prop, 'value': args[prop], 'found':true});
+                        }else{
+                            result.items.push({ 'key': prop, 'value': args[prop], 'found':false});
+                        }
+                    }
+                } else if (typeof key === 'string'){
+                    //set single
+                    if (obj.hasOwnProperty(key)) {
+                        if(obj[key] !== value){
+                            old  = obj[key];
+                            obj[key] = value;
+                            callback.call(instance,key, old, value);
+                        }
+                        result.items.push({'key': key, 'value': value , 'found':true});
+
+                    }else{
+                        result.items.push({'key': key, 'value': value , 'found':false});
+                    }
+                } else {
+                    //invalid params
+                    throw new Error('args must be a string or object');
+                }
+            }
+            return result;
+        }
+
+
+        /**
+         * Triggers a close event.
+         *
+         * @param {Object} instance	The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function triggerClose(instance) {
+            var found;
+            triggerCallback(instance, function (button) {
+                return found = (button.invokeOnClose === true);
+            });
+            //none of the buttons registered as onclose callback
+            //close the dialog
+            if (!found && instance.isOpen()) {
+                instance.close();
+            }
+        }
+
+        /**
+         * Dialogs commands event handler, attached to the dialog commands element.
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Object} instance	The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function commandsClickHandler(event, instance) {
+            var target = event.srcElement || event.target;
+            switch (target) {
+            case instance.elements.commands.pin:
+                if (!instance.isPinned()) {
+                    pin(instance);
+                } else {
+                    unpin(instance);
+                }
+                break;
+            case instance.elements.commands.maximize:
+                if (!instance.isMaximized()) {
+                    maximize(instance);
+                } else {
+                    restore(instance);
+                }
+                break;
+            case instance.elements.commands.close:
+                triggerClose(instance);
+                break;
+            }
+            return false;
+        }
+
+        /**
+         * Helper: pins the modeless dialog.
+         *
+         * @param {Object} instance	The dialog instance.
+         * 
+         * @return {undefined}
+         */
+        function pin(instance) {
+            //pin the dialog
+            instance.set('pinned', true);
+        }
+
+        /**
+         * Helper: unpins the modeless dialog.
+         *
+         * @param {Object} instance	The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function unpin(instance) {
+            //unpin the dialog 
+            instance.set('pinned', false);
+        }
+
+
+        /**
+         * Helper: enlarges the dialog to fill the entire screen.
+         *
+         * @param {Object} instance	The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function maximize(instance) {
+            // allow custom `onmaximize` method
+            dispatchEvent('onmaximize', instance);
+            //maximize the dialog 
+            addClass(instance.elements.root, classes.maximized);
+            if (instance.isOpen()) {
+                ensureNoOverflow();
+            }
+            // allow custom `onmaximized` method
+            dispatchEvent('onmaximized', instance);
+        }
+
+        /**
+         * Helper: returns the dialog to its former size.
+         *
+         * @param {Object} instance	The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function restore(instance) {
+            // allow custom `onrestore` method
+            dispatchEvent('onrestore', instance);
+            //maximize the dialog 
+            removeClass(instance.elements.root, classes.maximized);
+            if (instance.isOpen()) {
+                ensureNoOverflow();
+            }
+            // allow custom `onrestored` method
+            dispatchEvent('onrestored', instance);
+        }
+
+        /**
+         * Show or hide the maximize box.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to add the behavior, removes it otherwise.
+         *
+         * @return {undefined}
+         */
+        function updatePinnable(instance) {
+            if (instance.get('pinnable')) {
+                // add class
+                addClass(instance.elements.root, classes.pinnable);
+            } else {
+                // remove class
+                removeClass(instance.elements.root, classes.pinnable);
+            }
+        }
+
+        /**
+         * Helper: Fixes the absolutly positioned modal div position.
+         *
+         * @param {Object} instance The dialog instance.
+         *
+         * @return {undefined}
+         */
+        function addAbsPositionFix(instance) {
+            var scrollLeft = getScrollLeft();
+            instance.elements.modal.style.marginTop = getScrollTop() + 'px';
+            instance.elements.modal.style.marginLeft = scrollLeft + 'px';
+            instance.elements.modal.style.marginRight = (-scrollLeft) + 'px';
+        }
+
+        /**
+         * Helper: Removes the absolutly positioned modal div position fix.
+         *
+         * @param {Object} instance The dialog instance.
+         *
+         * @return {undefined}
+         */
+        function removeAbsPositionFix(instance) {
+            var marginTop = parseInt(instance.elements.modal.style.marginTop, 10);
+            var marginLeft = parseInt(instance.elements.modal.style.marginLeft, 10);
+            instance.elements.modal.style.marginTop = '';
+            instance.elements.modal.style.marginLeft = '';
+            instance.elements.modal.style.marginRight = '';
+
+            if (instance.isOpen()) {
+                var top = 0,
+                    left = 0
+                ;
+                if (instance.elements.dialog.style.top !== '') {
+                    top = parseInt(instance.elements.dialog.style.top, 10);
+                }
+                instance.elements.dialog.style.top = (top + (marginTop - getScrollTop())) + 'px';
+
+                if (instance.elements.dialog.style.left !== '') {
+                    left = parseInt(instance.elements.dialog.style.left, 10);
+                }
+                instance.elements.dialog.style.left = (left + (marginLeft - getScrollLeft())) + 'px';
+            }
+        }
+        /**
+         * Helper: Adds/Removes the absolutly positioned modal div position fix based on its pinned setting.
+         *
+         * @param {Object} instance The dialog instance.
+         *
+         * @return {undefined}
+         */
+        function updateAbsPositionFix(instance) {
+            // if modeless and unpinned add fix
+            if (!instance.get('modal') && !instance.get('pinned')) {
+                addAbsPositionFix(instance);
+            } else {
+                removeAbsPositionFix(instance);
+            }
+        }
+        /**
+         * Toggles the dialog position lock | modeless only.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to make it modal, false otherwise.
+         *
+         * @return {undefined}
+         */
+        function updatePinned(instance) {
+            if (instance.get('pinned')) {
+                removeClass(instance.elements.root, classes.unpinned);
+                if (instance.isOpen()) {
+                    removeAbsPositionFix(instance);
+                }
+            } else {
+                addClass(instance.elements.root, classes.unpinned);
+                if (instance.isOpen() && !instance.isModal()) {
+                    addAbsPositionFix(instance);
+                }
+            }
+        }
+
+        /**
+         * Show or hide the maximize box.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to add the behavior, removes it otherwise.
+         *
+         * @return {undefined}
+         */
+        function updateMaximizable(instance) {
+            if (instance.get('maximizable')) {
+                // add class
+                addClass(instance.elements.root, classes.maximizable);
+            } else {
+                // remove class
+                removeClass(instance.elements.root, classes.maximizable);
+            }
+        }
+
+        /**
+         * Show or hide the close box.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to add the behavior, removes it otherwise.
+         *
+         * @return {undefined}
+         */
+        function updateClosable(instance) {
+            if (instance.get('closable')) {
+                // add class
+                addClass(instance.elements.root, classes.closable);
+                bindClosableEvents(instance);
+            } else {
+                // remove class
+                removeClass(instance.elements.root, classes.closable);
+                unbindClosableEvents(instance);
+            }
+        }
+
+        // flag to cancel click event if already handled by end resize event (the mousedown, mousemove, mouseup sequence fires a click event.).
+        var cancelClick = false;
+
+        /**
+         * Helper: closes the modal dialog when clicking the modal
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function modalClickHandler(event, instance) {
+            var target = event.srcElement || event.target;
+            if (!cancelClick && target === instance.elements.modal && instance.get('closableByDimmer') === true) {
+                triggerClose(instance);
+            }
+            cancelClick = false;
+            return false;
+        }
+
+        // flag to cancel keyup event if already handled by click event (pressing Enter on a focusted button).
+        var cancelKeyup = false;
+        /** 
+         * Helper: triggers a button callback
+         *
+         * @param {Object}		The dilog instance.
+         * @param {Function}	Callback to check which button triggered the event.
+         *
+         * @return {undefined}
+         */
+        function triggerCallback(instance, check) {
+            for (var idx = 0; idx < instance.__internal.buttons.length; idx += 1) {
+                var button = instance.__internal.buttons[idx];
+                if (!button.element.disabled && check(button)) {
+                    var closeEvent = createCloseEvent(idx, button);
+                    if (typeof instance.callback === 'function') {
+                        instance.callback.apply(instance, [closeEvent]);
+                    }
+                    //close the dialog only if not canceled.
+                    if (closeEvent.cancel === false) {
+                        instance.close();
+                    }
+                    break;
+                }
+            }
+        }
+
+        /**
+         * Clicks event handler, attached to the dialog footer.
+         *
+         * @param {Event}		DOM event object.
+         * @param {Object}		The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function buttonsClickHandler(event, instance) {
+            var target = event.srcElement || event.target;
+            triggerCallback(instance, function (button) {
+                // if this button caused the click, cancel keyup event
+                return button.element === target && (cancelKeyup = true);
+            });
+        }
+
+        /**
+         * Keyup event handler, attached to the document.body
+         *
+         * @param {Event}		DOM event object.
+         * @param {Object}		The dilog instance.
+         * 
+         * @return {undefined}
+         */
+        function keyupHandler(event) {
+            //hitting enter while button has focus will trigger keyup too.
+            //ignore if handled by clickHandler
+            if (cancelKeyup) {
+                cancelKeyup = false;
+                return;
+            }
+            var instance = openDialogs[openDialogs.length - 1];
+            var keyCode = event.keyCode;
+            if (instance.__internal.buttons.length === 0 && keyCode === keys.ESC && instance.get('closable') === true) {
+                triggerClose(instance);
+                return false;
+            }else if (usedKeys.indexOf(keyCode) > -1) {
+                triggerCallback(instance, function (button) {
+                    return button.key === keyCode;
+                });
+                return false;
+            }
+        }
+        /**
+        * Keydown event handler, attached to the document.body
+        *
+        * @param {Event}		DOM event object.
+        * @param {Object}		The dilog instance.
+        * 
+        * @return {undefined}
+        */
+        function keydownHandler(event) {
+            var instance = openDialogs[openDialogs.length - 1];
+            var keyCode = event.keyCode;
+            if (keyCode === keys.LEFT || keyCode === keys.RIGHT) {
+                var buttons = instance.__internal.buttons;
+                for (var x = 0; x < buttons.length; x += 1) {
+                    if (document.activeElement === buttons[x].element) {
+                        switch (keyCode) {
+                        case keys.LEFT:
+                            buttons[(x || buttons.length) - 1].element.focus();
+                            return;
+                        case keys.RIGHT:
+                            buttons[(x + 1) % buttons.length].element.focus();
+                            return;
+                        }
+                    }
+                }
+            }else if (keyCode < keys.F12 + 1 && keyCode > keys.F1 - 1 && usedKeys.indexOf(keyCode) > -1) {
+                event.preventDefault();
+                event.stopPropagation();
+                triggerCallback(instance, function (button) {
+                    return button.key === keyCode;
+                });
+                return false;
+            }
+        }
+
+
+        /**
+         * Sets focus to proper dialog element
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Node} [resetTarget=undefined] DOM element to reset focus to.
+         *
+         * @return {undefined}
+         */
+        function setFocus(instance, resetTarget) {
+            // reset target has already been determined.
+            if (resetTarget) {
+                resetTarget.focus();
+            } else {
+                // current instance focus settings
+                var focus = instance.__internal.focus;
+                // the focus element.
+                var element = focus.element;
+
+                switch (typeof focus.element) {
+                // a number means a button index
+                case 'number':
+                    if (instance.__internal.buttons.length > focus.element) {
+                        //in basic view, skip focusing the buttons.
+                        if (instance.get('basic') === true) {
+                            element = instance.elements.reset[0];
+                        } else {
+                            element = instance.__internal.buttons[focus.element].element;
+                        }
+                    }
+                    break;
+                // a string means querySelector to select from dialog body contents.
+                case 'string':
+                    element = instance.elements.body.querySelector(focus.element);
+                    break;
+                // a function should return the focus element.
+                case 'function':
+                    element = focus.element.call(instance);
+                    break;
+                }
+                
+                // if no focus element, default to first reset element.
+                if ((typeof element === 'undefined' || element === null) && instance.__internal.buttons.length === 0) {
+                    element = instance.elements.reset[0];
+                }
+                // focus
+                if (element && element.focus) {
+                    element.focus();
+                    // if selectable
+                    if (focus.select && element.select) {
+                        element.select();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Focus event handler, attached to document.body and dialogs own reset links.
+         * handles the focus for modal dialogs only.
+         *
+         * @param {Event} event DOM focus event object.
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function onReset(event, instance) {
+
+            // should work on last modal if triggered from document.body 
+            if (!instance) {
+                for (var x = openDialogs.length - 1; x > -1; x -= 1) {
+                    if (openDialogs[x].isModal()) {
+                        instance = openDialogs[x];
+                        break;
+                    }
+                }
+            }
+            // if modal
+            if (instance && instance.isModal()) {
+                // determine reset target to enable forward/backward tab cycle.
+                var resetTarget, target = event.srcElement || event.target;
+                var lastResetElement = target === instance.elements.reset[1] || (instance.__internal.buttons.length === 0 && target === document.body);
+
+                // if last reset link, then go to maximize or close
+                if (lastResetElement) {
+                    if (instance.get('maximizable')) {
+                        resetTarget = instance.elements.commands.maximize;
+                    } else if (instance.get('closable')) {
+                        resetTarget = instance.elements.commands.close;
+                    }
+                }
+                // if no reset target found, try finding the best button
+                if (resetTarget === undefined) {
+                    if (typeof instance.__internal.focus.element === 'number') {
+                        // button focus element, go to first available button
+                        if (target === instance.elements.reset[0]) {
+                            resetTarget = instance.elements.buttons.auxiliary.firstChild || instance.elements.buttons.primary.firstChild;
+                        } else if (lastResetElement) {
+                            //restart the cycle by going to first reset link
+                            resetTarget = instance.elements.reset[0];
+                        }
+                    } else {
+                        // will reach here when tapping backwards, so go to last child
+                        // The focus element SHOULD NOT be a button (logically!).
+                        if (target === instance.elements.reset[0]) {
+                            resetTarget = instance.elements.buttons.primary.lastChild || instance.elements.buttons.auxiliary.lastChild;
+                        }
+                    }
+                }
+                // focus
+                setFocus(instance, resetTarget);
+            }
+        }
+        /**
+         * Transition in transitionend event handler. 
+         *
+         * @param {Event}		TransitionEnd event object.
+         * @param {Object}		The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function handleTransitionInEvent(event, instance) {
+            // clear the timer
+            clearTimeout(instance.__internal.timerIn);
+
+            // once transition is complete, set focus
+            setFocus(instance);
+
+            //restore scroll to prevent document jump
+            restoreScrollPosition();
+
+            // allow handling key up after transition ended.
+            cancelKeyup = false;
+
+            // allow custom `onfocus` method
+            dispatchEvent('onfocus', instance);
+
+            // unbind the event
+            off(instance.elements.dialog, transition.type, instance.__internal.transitionInHandler);
+
+            removeClass(instance.elements.root, classes.animationIn);
+        }
+
+        /**
+         * Transition out transitionend event handler. 
+         *
+         * @param {Event}		TransitionEnd event object.
+         * @param {Object}		The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function handleTransitionOutEvent(event, instance) {
+            // clear the timer
+            clearTimeout(instance.__internal.timerOut);
+            // unbind the event
+            off(instance.elements.dialog, transition.type, instance.__internal.transitionOutHandler);
+
+            // reset move updates
+            resetMove(instance);
+            // reset resize updates
+            resetResize(instance);
+
+            // restore if maximized
+            if (instance.isMaximized() && !instance.get('startMaximized')) {
+                restore(instance);
+            }
+
+            // return focus to the last active element
+            if (alertify.defaults.maintainFocus && instance.__internal.activeElement) {
+                instance.__internal.activeElement.focus();
+                instance.__internal.activeElement = null;
+            }
+            
+            //destory the instance
+            if (typeof instance.__internal.destroy === 'function') {
+                instance.__internal.destroy.apply(instance);
+            }
+        }
+        /* Controls moving a dialog around */
+        //holde the current moving instance
+        var movable = null,
+            //holds the current X offset when move starts
+            offsetX = 0,
+            //holds the current Y offset when move starts
+            offsetY = 0,
+            xProp = 'pageX',
+            yProp = 'pageY',
+            bounds = null,
+            refreshTop = false,
+            moveDelegate = null
+        ;
+
+        /**
+         * Helper: sets the element top/left coordinates
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Node} element The element being moved.
+         * 
+         * @return {undefined}
+         */
+        function moveElement(event, element) {
+            var left = (event[xProp] - offsetX),
+                top  = (event[yProp] - offsetY);
+
+            if(refreshTop){
+                top -= document.body.scrollTop;
+            }
+           
+            element.style.left = left + 'px';
+            element.style.top = top + 'px';
+           
+        }
+        /**
+         * Helper: sets the element top/left coordinates within screen bounds
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Node} element The element being moved.
+         * 
+         * @return {undefined}
+         */
+        function moveElementBounded(event, element) {
+            var left = (event[xProp] - offsetX),
+                top  = (event[yProp] - offsetY);
+
+            if(refreshTop){
+                top -= document.body.scrollTop;
+            }
+            
+            element.style.left = Math.min(bounds.maxLeft, Math.max(bounds.minLeft, left)) + 'px';
+            if(refreshTop){
+                element.style.top = Math.min(bounds.maxTop, Math.max(bounds.minTop, top)) + 'px';
+            }else{
+                element.style.top = Math.max(bounds.minTop, top) + 'px';
+            }
+        }
+            
+
+        /**
+         * Triggers the start of a move event, attached to the header element mouse down event.
+         * Adds no-selection class to the body, disabling selection while moving.
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Object} instance The dilog instance.
+         * 
+         * @return {Boolean} false
+         */
+        function beginMove(event, instance) {
+            if (resizable === null && !instance.isMaximized() && instance.get('movable')) {
+                var eventSrc, left=0, top=0;
+                if (event.type === 'touchstart') {
+                    event.preventDefault();
+                    eventSrc = event.targetTouches[0];
+                    xProp = 'clientX';
+                    yProp = 'clientY';
+                } else if (event.button === 0) {
+                    eventSrc = event;
+                }
+
+                if (eventSrc) {
+
+                    var element = instance.elements.dialog;
+                    addClass(element, classes.capture);
+
+                    if (element.style.left) {
+                        left = parseInt(element.style.left, 10);
+                    }
+
+                    if (element.style.top) {
+                        top = parseInt(element.style.top, 10);
+                    }
+                    
+                    offsetX = eventSrc[xProp] - left;
+                    offsetY = eventSrc[yProp] - top;
+
+                    if(instance.isModal()){
+                        offsetY += instance.elements.modal.scrollTop;
+                    }else if(instance.isPinned()){
+                        offsetY -= document.body.scrollTop;
+                    }
+                    
+                    if(instance.get('moveBounded')){
+                        var current = element,
+                            offsetLeft = -left,
+                            offsetTop = -top;
+                        
+                        //calc offset
+                        do {
+                            offsetLeft += current.offsetLeft;
+                            offsetTop += current.offsetTop;
+                        } while (current = current.offsetParent);
+                        
+                        bounds = {
+                            maxLeft : offsetLeft,
+                            minLeft : -offsetLeft,
+                            maxTop  : document.documentElement.clientHeight - element.clientHeight - offsetTop,
+                            minTop  : -offsetTop
+                        };
+                        moveDelegate = moveElementBounded;
+                    }else{
+                        bounds = null;
+                        moveDelegate = moveElement;
+                    }
+                    
+                    // allow custom `onmove` method
+                    dispatchEvent('onmove', instance);
+
+                    refreshTop = !instance.isModal() && instance.isPinned();
+                    movable = instance;
+                    moveDelegate(eventSrc, element);
+                    addClass(document.body, classes.noSelection);
+                    return false;
+                }
+            }
+        }
+
+        /**
+         * The actual move handler,  attached to document.body mousemove event.
+         *
+         * @param {Event} event	DOM event object.
+         * 
+         * @return {undefined}
+         */
+        function move(event) {
+            if (movable) {
+                var eventSrc;
+                if (event.type === 'touchmove') {
+                    event.preventDefault();
+                    eventSrc = event.targetTouches[0];
+                } else if (event.button === 0) {
+                    eventSrc = event;
+                }
+                if (eventSrc) {
+                    moveDelegate(eventSrc, movable.elements.dialog);
+                }
+            }
+        }
+
+        /**
+         * Triggers the end of a move event,  attached to document.body mouseup event.
+         * Removes no-selection class from document.body, allowing selection.
+         *
+         * @return {undefined}
+         */
+        function endMove() {
+            if (movable) {
+                var instance = movable;
+                movable = bounds = null;
+                removeClass(document.body, classes.noSelection);
+                removeClass(instance.elements.dialog, classes.capture);
+                // allow custom `onmoved` method
+                dispatchEvent('onmoved', instance);
+            }
+        }
+
+        /**
+         * Resets any changes made by moving the element to its original state,
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function resetMove(instance) {
+            movable = null;
+            var element = instance.elements.dialog;
+            element.style.left = element.style.top = '';
+        }
+
+        /**
+         * Updates the dialog move behavior.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to add the behavior, removes it otherwise.
+         *
+         * @return {undefined}
+         */
+        function updateMovable(instance) {
+            if (instance.get('movable')) {
+                // add class
+                addClass(instance.elements.root, classes.movable);
+                if (instance.isOpen()) {
+                    bindMovableEvents(instance);
+                }
+            } else {
+
+                //reset
+                resetMove(instance);
+                // remove class
+                removeClass(instance.elements.root, classes.movable);
+                if (instance.isOpen()) {
+                    unbindMovableEvents(instance);
+                }
+            }
+        }
+
+        /* Controls moving a dialog around */
+        //holde the current instance being resized		
+        var resizable = null,
+            //holds the staring left offset when resize starts.
+            startingLeft = Number.Nan,
+            //holds the staring width when resize starts.
+            startingWidth = 0,
+            //holds the initial width when resized for the first time.
+            minWidth = 0,
+            //holds the offset of the resize handle.
+            handleOffset = 0
+        ;
+
+        /**
+         * Helper: sets the element width/height and updates left coordinate if neccessary.
+         *
+         * @param {Event} event	DOM mousemove event object.
+         * @param {Node} element The element being moved.
+         * @param {Boolean} pinned A flag indicating if the element being resized is pinned to the screen.
+         * 
+         * @return {undefined}
+         */
+        function resizeElement(event, element, pageRelative) {
+
+            //calculate offsets from 0,0
+            var current = element;
+            var offsetLeft = 0;
+            var offsetTop = 0;
+            do {
+                offsetLeft += current.offsetLeft;
+                offsetTop += current.offsetTop;
+            } while (current = current.offsetParent);
+
+            // determine X,Y coordinates.
+            var X, Y;
+            if (pageRelative === true) {
+                X = event.pageX;
+                Y = event.pageY;
+            } else {
+                X = event.clientX;
+                Y = event.clientY;
+            }
+            // rtl handling
+            var isRTL = isRightToLeft();
+            if (isRTL) {
+                // reverse X 
+                X = document.body.offsetWidth - X;
+                // if has a starting left, calculate offsetRight
+                if (!isNaN(startingLeft)) {
+                    offsetLeft = document.body.offsetWidth - offsetLeft - element.offsetWidth;
+                }
+            }
+
+            // set width/height
+            element.style.height = (Y - offsetTop + handleOffset) + 'px';
+            element.style.width = (X - offsetLeft + handleOffset) + 'px';
+
+            // if the element being resized has a starting left, maintain it.
+            // the dialog is centered, divide by half the offset to maintain the margins.
+            if (!isNaN(startingLeft)) {
+                var diff = Math.abs(element.offsetWidth - startingWidth) * 0.5;
+                if (isRTL) {
+                    //negate the diff, why?
+                    //when growing it should decrease left
+                    //when shrinking it should increase left
+                    diff *= -1;
+                }
+                if (element.offsetWidth > startingWidth) {
+                    //growing
+                    element.style.left = (startingLeft + diff) + 'px';
+                } else if (element.offsetWidth >= minWidth) {
+                    //shrinking
+                    element.style.left = (startingLeft - diff) + 'px';
+                }
+            }
+        }
+
+        /**
+         * Triggers the start of a resize event, attached to the resize handle element mouse down event.
+         * Adds no-selection class to the body, disabling selection while moving.
+         *
+         * @param {Event} event	DOM event object.
+         * @param {Object} instance The dilog instance.
+         * 
+         * @return {Boolean} false
+         */
+        function beginResize(event, instance) {
+            if (!instance.isMaximized()) {
+                var eventSrc;
+                if (event.type === 'touchstart') {
+                    event.preventDefault();
+                    eventSrc = event.targetTouches[0];
+                } else if (event.button === 0) {
+                    eventSrc = event;
+                }
+                if (eventSrc) {
+                    // allow custom `onresize` method
+                    dispatchEvent('onresize', instance);
+                    
+                    resizable = instance;
+                    handleOffset = instance.elements.resizeHandle.offsetHeight / 2;
+                    var element = instance.elements.dialog;
+                    addClass(element, classes.capture);
+                    startingLeft = parseInt(element.style.left, 10);
+                    element.style.height = element.offsetHeight + 'px';
+                    element.style.minHeight = instance.elements.header.offsetHeight + instance.elements.footer.offsetHeight + 'px';
+                    element.style.width = (startingWidth = element.offsetWidth) + 'px';
+
+                    if (element.style.maxWidth !== 'none') {
+                        element.style.minWidth = (minWidth = element.offsetWidth) + 'px';
+                    }
+                    element.style.maxWidth = 'none';
+                    addClass(document.body, classes.noSelection);
+                    return false;
+                }
+            }
+        }
+
+        /**
+         * The actual resize handler,  attached to document.body mousemove event.
+         *
+         * @param {Event} event	DOM event object.
+         * 
+         * @return {undefined}
+         */
+        function resize(event) {
+            if (resizable) {
+                var eventSrc;
+                if (event.type === 'touchmove') {
+                    event.preventDefault();
+                    eventSrc = event.targetTouches[0];
+                } else if (event.button === 0) {
+                    eventSrc = event;
+                }
+                if (eventSrc) {
+                    resizeElement(eventSrc, resizable.elements.dialog, !resizable.get('modal') && !resizable.get('pinned'));
+                }
+            }
+        }
+
+        /**
+         * Triggers the end of a resize event,  attached to document.body mouseup event.
+         * Removes no-selection class from document.body, allowing selection.
+         *
+         * @return {undefined}
+         */
+        function endResize() {
+            if (resizable) {
+                var instance = resizable;
+                resizable = null;
+                removeClass(document.body, classes.noSelection);
+                removeClass(instance.elements.dialog, classes.capture);
+                cancelClick = true;
+                // allow custom `onresized` method
+                dispatchEvent('onresized', instance);
+            }
+        }
+
+        /**
+         * Resets any changes made by resizing the element to its original state.
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function resetResize(instance) {
+            resizable = null;
+            var element = instance.elements.dialog;
+            if (element.style.maxWidth === 'none') {
+                //clear inline styles.
+                element.style.maxWidth = element.style.minWidth = element.style.width = element.style.height = element.style.minHeight = element.style.left = '';
+                //reset variables.
+                startingLeft = Number.Nan;
+                startingWidth = minWidth = handleOffset = 0;
+            }
+        }
+
+
+        /**
+         * Updates the dialog move behavior.
+         *
+         * @param {Object} instance The dilog instance.
+         * @param {Boolean} on True to add the behavior, removes it otherwise.
+         *
+         * @return {undefined}
+         */
+        function updateResizable(instance) {
+            if (instance.get('resizable')) {
+                // add class
+                addClass(instance.elements.root, classes.resizable);
+                if (instance.isOpen()) {
+                    bindResizableEvents(instance);
+                }
+            } else {
+                //reset
+                resetResize(instance);
+                // remove class
+                removeClass(instance.elements.root, classes.resizable);
+                if (instance.isOpen()) {
+                    unbindResizableEvents(instance);
+                }
+            }
+        }
+
+        /**
+         * Reset move/resize on window resize.
+         *
+         * @param {Event} event	window resize event object.
+         *
+         * @return {undefined}
+         */
+        function windowResize(/*event*/) {
+            for (var x = 0; x < openDialogs.length; x += 1) {
+                var instance = openDialogs[x];
+                if (instance.get('autoReset')) {
+                    resetMove(instance);
+                    resetResize(instance);
+                }
+            }
+        }
+        /**
+         * Bind dialogs events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bindEvents(instance) {
+            // if first dialog, hook global handlers
+            if (openDialogs.length === 1) {
+                //global
+                on(window, 'resize', windowResize);
+                on(document.body, 'keyup', keyupHandler);
+                on(document.body, 'keydown', keydownHandler);
+                on(document.body, 'focus', onReset);
+
+                //move
+                on(document.documentElement, 'mousemove', move);
+                on(document.documentElement, 'touchmove', move);
+                on(document.documentElement, 'mouseup', endMove);
+                on(document.documentElement, 'touchend', endMove);
+                //resize
+                on(document.documentElement, 'mousemove', resize);
+                on(document.documentElement, 'touchmove', resize);
+                on(document.documentElement, 'mouseup', endResize);
+                on(document.documentElement, 'touchend', endResize);
+            }
+
+            // common events
+            on(instance.elements.commands.container, 'click', instance.__internal.commandsClickHandler);
+            on(instance.elements.footer, 'click', instance.__internal.buttonsClickHandler);
+            on(instance.elements.reset[0], 'focus', instance.__internal.resetHandler);
+            on(instance.elements.reset[1], 'focus', instance.__internal.resetHandler);
+
+            //prevent handling key up when dialog is being opened by a key stroke.
+            cancelKeyup = true;
+            // hook in transition handler
+            on(instance.elements.dialog, transition.type, instance.__internal.transitionInHandler);
+
+            // modelss only events
+            if (!instance.get('modal')) {
+                bindModelessEvents(instance);
+            }
+
+            // resizable
+            if (instance.get('resizable')) {
+                bindResizableEvents(instance);
+            }
+
+            // movable
+            if (instance.get('movable')) {
+                bindMovableEvents(instance);
+            }
+        }
+
+        /**
+         * Unbind dialogs events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function unbindEvents(instance) {
+            // if last dialog, remove global handlers
+            if (openDialogs.length === 1) {
+                //global
+                off(window, 'resize', windowResize);
+                off(document.body, 'keyup', keyupHandler);
+                off(document.body, 'keydown', keydownHandler);
+                off(document.body, 'focus', onReset);
+                //move
+                off(document.documentElement, 'mousemove', move);
+                off(document.documentElement, 'mouseup', endMove);
+                //resize
+                off(document.documentElement, 'mousemove', resize);
+                off(document.documentElement, 'mouseup', endResize);
+            }
+
+            // common events
+            off(instance.elements.commands.container, 'click', instance.__internal.commandsClickHandler);
+            off(instance.elements.footer, 'click', instance.__internal.buttonsClickHandler);
+            off(instance.elements.reset[0], 'focus', instance.__internal.resetHandler);
+            off(instance.elements.reset[1], 'focus', instance.__internal.resetHandler);
+
+            // hook out transition handler
+            on(instance.elements.dialog, transition.type, instance.__internal.transitionOutHandler);
+
+            // modelss only events
+            if (!instance.get('modal')) {
+                unbindModelessEvents(instance);
+            }
+
+            // movable
+            if (instance.get('movable')) {
+                unbindMovableEvents(instance);
+            }
+
+            // resizable
+            if (instance.get('resizable')) {
+                unbindResizableEvents(instance);
+            }
+
+        }
+
+        /**
+         * Bind modeless specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bindModelessEvents(instance) {
+            on(instance.elements.dialog, 'focus', instance.__internal.bringToFrontHandler, true);
+        }
+
+        /**
+         * Unbind modeless specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function unbindModelessEvents(instance) {
+            off(instance.elements.dialog, 'focus', instance.__internal.bringToFrontHandler, true);
+        }
+
+
+
+        /**
+         * Bind movable specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bindMovableEvents(instance) {
+            on(instance.elements.header, 'mousedown', instance.__internal.beginMoveHandler);
+            on(instance.elements.header, 'touchstart', instance.__internal.beginMoveHandler);
+        }
+
+        /**
+         * Unbind movable specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function unbindMovableEvents(instance) {
+            off(instance.elements.header, 'mousedown', instance.__internal.beginMoveHandler);
+            off(instance.elements.header, 'touchstart', instance.__internal.beginMoveHandler);
+        }
+
+
+
+        /**
+         * Bind resizable specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bindResizableEvents(instance) {
+            on(instance.elements.resizeHandle, 'mousedown', instance.__internal.beginResizeHandler);
+            on(instance.elements.resizeHandle, 'touchstart', instance.__internal.beginResizeHandler);
+        }
+
+        /**
+         * Unbind resizable specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function unbindResizableEvents(instance) {
+            off(instance.elements.resizeHandle, 'mousedown', instance.__internal.beginResizeHandler);
+            off(instance.elements.resizeHandle, 'touchstart', instance.__internal.beginResizeHandler);
+        }
+
+        /**
+         * Bind closable events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function bindClosableEvents(instance) {
+            on(instance.elements.modal, 'click', instance.__internal.modalClickHandler);
+        }
+
+        /**
+         * Unbind closable specific events
+         *
+         * @param {Object} instance The dilog instance.
+         *
+         * @return {undefined}
+         */
+        function unbindClosableEvents(instance) {
+            off(instance.elements.modal, 'click', instance.__internal.modalClickHandler);
+        }
+        // dialog API
+        return {
+            __init:initialize,
+            /**
+             * Check if dialog is currently open
+             *
+             * @return {Boolean}
+             */
+            isOpen: function () {
+                return this.__internal.isOpen;
+            },
+            isModal: function (){
+                return this.elements.root.className.indexOf(classes.modeless) < 0;
+            },
+            isMaximized:function(){
+                return this.elements.root.className.indexOf(classes.maximized) > -1;
+            },
+            isPinned:function(){
+                return this.elements.root.className.indexOf(classes.unpinned) < 0;
+            },
+            maximize:function(){
+                if(!this.isMaximized()){
+                    maximize(this);
+                }
+                return this;
+            },
+            restore:function(){
+                if(this.isMaximized()){
+                    restore(this);
+                }
+                return this;
+            },
+            pin:function(){
+                if(!this.isPinned()){
+                    pin(this);
+                }
+                return this;
+            },
+            unpin:function(){
+                if(this.isPinned()){
+                    unpin(this);
+                }
+                return this;
+            },
+            bringToFront:function(){
+                bringToFront(null, this);
+                return this;
+            },
+            /**
+             * Move the dialog to a specific x/y coordinates
+             *
+             * @param {Number} x    The new dialog x coordinate in pixels.
+             * @param {Number} y    The new dialog y coordinate in pixels.
+             *
+             * @return {Object} The dialog instance.
+             */
+            moveTo:function(x,y){
+                if(!isNaN(x) && !isNaN(y)){
+                    // allow custom `onmove` method
+                    dispatchEvent('onmove', this);
+                    
+                    var element = this.elements.dialog,
+                        current = element,
+                        offsetLeft = 0,
+                        offsetTop = 0;
+                    
+                    //subtract existing left,top
+                    if (element.style.left) {
+                        offsetLeft -= parseInt(element.style.left, 10);
+                    }
+                    if (element.style.top) {
+                        offsetTop -= parseInt(element.style.top, 10);
+                    }
+                    //calc offset
+                    do {
+                        offsetLeft += current.offsetLeft;
+                        offsetTop += current.offsetTop;
+                    } while (current = current.offsetParent);
+
+                    //calc left, top
+                    var left = (x - offsetLeft);
+                    var top  = (y - offsetTop);
+
+                    //// rtl handling
+                    if (isRightToLeft()) {
+                        left *= -1;
+                    }
+
+                    element.style.left = left + 'px';
+                    element.style.top = top + 'px';
+                    
+                    // allow custom `onmoved` method
+                    dispatchEvent('onmoved', this);
+                }
+                return this;
+            },
+            /**
+             * Resize the dialog to a specific width/height (the dialog must be 'resizable').
+             * The dialog can be resized to:
+             *  A minimum width equal to the initial display width
+             *  A minimum height equal to the sum of header/footer heights.
+             *
+             *
+             * @param {Number or String} width    The new dialog width in pixels or in percent.
+             * @param {Number or String} height   The new dialog height in pixels or in percent.
+             *
+             * @return {Object} The dialog instance.
+             */
+            resizeTo:function(width,height){
+                var w = parseFloat(width),
+                    h = parseFloat(height),
+                    regex = /(\d*\.\d+|\d+)%/
+                ;
+
+                if(!isNaN(w) && !isNaN(h) && this.get('resizable') === true){
+                    
+                    // allow custom `onresize` method
+                    dispatchEvent('onresize', this);
+                    
+                    if(('' + width).match(regex)){
+                        w = w / 100 * document.documentElement.clientWidth ;
+                    }
+
+                    if(('' + height).match(regex)){
+                        h = h / 100 * document.documentElement.clientHeight;
+                    }
+
+                    var element = this.elements.dialog;
+                    if (element.style.maxWidth !== 'none') {
+                        element.style.minWidth = (minWidth = element.offsetWidth) + 'px';
+                    }
+                    element.style.maxWidth = 'none';
+                    element.style.minHeight = this.elements.header.offsetHeight + this.elements.footer.offsetHeight + 'px';
+                    element.style.width = w + 'px';
+                    element.style.height = h + 'px';
+                    
+                    // allow custom `onresized` method
+                    dispatchEvent('onresized', this);
+                }
+                return this;
+            },
+            /**
+             * Gets or Sets dialog settings/options 
+             *
+             * @param {String|Object} key A string specifying a propery name or a collection of key/value pairs.
+             * @param {Object} value Optional, the value associated with the key (in case it was a string).
+             *
+             * @return {undefined}
+             */
+            setting : function (key, value) {
+                var self = this;
+                var result = update(this, this.__internal.options, function(k,o,n){ optionUpdated(self,k,o,n); }, key, value);
+                if(result.op === 'get'){
+                    if(result.found){
+                        return result.value;
+                    }else if(typeof this.settings !== 'undefined'){
+                        return update(this, this.settings, this.settingUpdated || function(){}, key, value).value;
+                    }else{
+                        return undefined;
+                    }
+                }else if(result.op === 'set'){
+                    if(result.items.length > 0){
+                        var callback = this.settingUpdated || function(){};
+                        for(var x=0;x<result.items.length;x+=1){
+                            var item = result.items[x];
+                            if(!item.found && typeof this.settings !== 'undefined'){
+                                update(this, this.settings, callback, item.key, item.value);
+                            }
+                        }
+                    }
+                    return this;
+                }
+            },
+            /**
+             * [Alias] Sets dialog settings/options 
+             */
+            set:function(key, value){
+                this.setting(key,value);
+                return this;
+            },
+            /**
+             * [Alias] Gets dialog settings/options 
+             */
+            get:function(key){
+                return this.setting(key);
+            },
+            /**
+            * Sets dialog header
+            * @content {string or element}
+            *
+            * @return {undefined}
+            */
+            setHeader:function(content){
+                if(typeof content === 'string'){
+                    clearContents(this.elements.header);
+                    this.elements.header.innerHTML = content;
+                }else if (content instanceof window.HTMLElement && this.elements.header.firstChild !== content){
+                    clearContents(this.elements.header);
+                    this.elements.header.appendChild(content);
+                }
+                return this;
+            },
+            /**
+            * Sets dialog contents
+            * @content {string or element}
+            *
+            * @return {undefined}
+            */
+            setContent:function(content){
+                if(typeof content === 'string'){
+                    clearContents(this.elements.content);
+                    this.elements.content.innerHTML = content;
+                }else if (content instanceof window.HTMLElement && this.elements.content.firstChild !== content){
+                    clearContents(this.elements.content);
+                    this.elements.content.appendChild(content);
+                }
+                return this;
+            },
+            /**
+             * Show the dialog as modal
+             *
+             * @return {Object} the dialog instance.
+             */
+            showModal: function(className){
+                return this.show(true, className);
+            },
+            /**
+             * Show the dialog
+             *
+             * @return {Object} the dialog instance.
+             */
+            show: function (modal, className) {
+                
+                // ensure initialization
+                initialize(this);
+
+                if ( !this.__internal.isOpen ) {
+
+                    // add to open dialogs
+                    this.__internal.isOpen = true;
+                    openDialogs.push(this);
+
+                    // save last focused element
+                    if(alertify.defaults.maintainFocus){
+                        this.__internal.activeElement = document.activeElement;
+                    }
+
+                    // set tabindex attribute on body element this allows script to give it focusable
+                    if(!document.body.hasAttribute('tabindex')) {
+                        document.body.setAttribute( 'tabindex', tabindex = '0');
+                    }
+
+                    //allow custom dom manipulation updates before showing the dialog.
+                    if(typeof this.prepare === 'function'){
+                        this.prepare();
+                    }
+
+                    bindEvents(this);
+
+                    if(modal !== undefined){
+                        this.set('modal', modal);
+                    }
+
+                    //save scroll to prevent document jump
+                    saveScrollPosition();
+
+                    ensureNoOverflow();
+
+                    // allow custom dialog class on show
+                    if(typeof className === 'string' && className !== ''){
+                        this.__internal.className = className;
+                        addClass(this.elements.root, className);
+                    }
+
+                    // maximize if start maximized
+                    if ( this.get('startMaximized')) {
+                        this.maximize();
+                    }else if(this.isMaximized()){
+                        restore(this);
+                    }
+
+                    updateAbsPositionFix(this);
+
+                    removeClass(this.elements.root, classes.animationOut);
+                    addClass(this.elements.root, classes.animationIn);
+
+                    // set 1s fallback in case transition event doesn't fire
+                    clearTimeout( this.__internal.timerIn);
+                    this.__internal.timerIn = setTimeout( this.__internal.transitionInHandler, transition.supported ? 1000 : 100 );
+
+                    if(isSafari){
+                        // force desktop safari reflow
+                        var root = this.elements.root;
+                        root.style.display  = 'none';
+                        setTimeout(function(){root.style.display  = 'block';}, 0);
+                    }
+
+                    //reflow
+                    reflow = this.elements.root.offsetWidth;
+                  
+                    // show dialog
+                    removeClass(this.elements.root, classes.hidden);
+
+                    // internal on show event
+                    if(typeof this.hooks.onshow === 'function'){
+                        this.hooks.onshow.call(this);
+                    }
+
+                    // allow custom `onshow` method
+                    dispatchEvent('onshow', this);
+
+                }else{
+                    // reset move updates
+                    resetMove(this);
+                    // reset resize updates
+                    resetResize(this);
+                    // shake the dialog to indicate its already open
+                    addClass(this.elements.dialog, classes.shake);
+                    var self = this;
+                    setTimeout(function(){
+                        removeClass(self.elements.dialog, classes.shake);
+                    },200);
+                }
+                return this;
+            },
+            /**
+             * Close the dialog
+             *
+             * @return {Object} The dialog instance
+             */
+            close: function () {
+                if (this.__internal.isOpen ) {
+                    // custom `onclosing` event
+                    if(dispatchEvent('onclosing', this) !== false){
+
+                        unbindEvents(this);
+
+                        removeClass(this.elements.root, classes.animationIn);
+                        addClass(this.elements.root, classes.animationOut);
+
+                        // set 1s fallback in case transition event doesn't fire
+                        clearTimeout( this.__internal.timerOut );
+                        this.__internal.timerOut = setTimeout( this.__internal.transitionOutHandler, transition.supported ? 1000 : 100 );
+                        // hide dialog
+                        addClass(this.elements.root, classes.hidden);
+                        //reflow
+                        reflow = this.elements.modal.offsetWidth;
+
+                        // remove custom dialog class on hide
+                        if (typeof this.__internal.className !== 'undefined' && this.__internal.className !== '') {
+                            removeClass(this.elements.root, this.__internal.className);
+                        }
+
+                        // internal on close event
+                        if(typeof this.hooks.onclose === 'function'){
+                            this.hooks.onclose.call(this);
+                        }
+
+                        // allow custom `onclose` method
+                        dispatchEvent('onclose', this);
+
+                        //remove from open dialogs
+                        openDialogs.splice(openDialogs.indexOf(this),1);
+                        this.__internal.isOpen = false;
+
+                        ensureNoOverflow();
+                    }
+
+                }
+                // last dialog and tab index was set by us, remove it.
+                if(!openDialogs.length && tabindex === '0'){
+                    document.body.removeAttribute('tabindex')
+                }
+                return this;
+            },
+            /**
+             * Close all open dialogs except this.
+             *
+             * @return {undefined}
+             */
+            closeOthers:function(){
+                alertify.closeAll(this);
+                return this;
+            },
+            /**
+             * Destroys this dialog instance
+             *
+             * @return {undefined}
+             */
+            destroy:function(){
+                if (this.__internal.isOpen ) {
+                    //mark dialog for destruction, this will be called on tranistionOut event.
+                    this.__internal.destroy = function(){
+                        destruct(this, initialize);
+                    };
+                    //close the dialog to unbind all events.
+                    this.close();
+                }else{
+                    destruct(this, initialize);
+                }
+                return this;
+            },
+        };
+	} () );
+    var notifier = (function () {
+        var reflow,
+            element,
+            openInstances = [],
+            classes = {
+                base: 'alertify-notifier',
+                message: 'ajs-message',
+                top: 'ajs-top',
+                right: 'ajs-right',
+                bottom: 'ajs-bottom',
+                left: 'ajs-left',
+                center: 'ajs-center',
+                visible: 'ajs-visible',
+                hidden: 'ajs-hidden',
+                close: 'ajs-close'
+            };
+        /**
+         * Helper: initializes the notifier instance
+         *
+         */
+        function initialize(instance) {
+
+            if (!instance.__internal) {
+                instance.__internal = {
+                    position: alertify.defaults.notifier.position,
+                    delay: alertify.defaults.notifier.delay,
+                };
+
+                element = document.createElement('DIV');
+
+                updatePosition(instance);
+            }
+
+            //add to DOM tree.
+            if (element.parentNode !== document.body) {
+                document.body.appendChild(element);
+            }
+        }
+
+        function pushInstance(instance) {
+            instance.__internal.pushed = true;
+            openInstances.push(instance);
+        }
+        function popInstance(instance) {
+            openInstances.splice(openInstances.indexOf(instance), 1);
+            instance.__internal.pushed = false;
+        }
+        /**
+         * Helper: update the notifier instance position
+         *
+         */
+        function updatePosition(instance) {
+            element.className = classes.base;
+            switch (instance.__internal.position) {
+            case 'top-right':
+                addClass(element, classes.top + ' ' + classes.right);
+                break;
+            case 'top-left':
+                addClass(element, classes.top + ' ' + classes.left);
+                break;
+            case 'top-center':
+                addClass(element, classes.top + ' ' + classes.center);
+                break;
+            case 'bottom-left':
+                addClass(element, classes.bottom + ' ' + classes.left);
+                break;
+            case 'bottom-center':
+                addClass(element, classes.bottom + ' ' + classes.center);
+                break;
+
+            default:
+            case 'bottom-right':
+                addClass(element, classes.bottom + ' ' + classes.right);
+                break;
+            }
+        }
+
+        /**
+        * creates a new notification message
+        *
+        * @param  {DOMElement} message	The notifier message element
+        * @param  {Number} wait   Time (in ms) to wait before the message is dismissed, a value of 0 means keep open till clicked.
+        * @param  {Function} callback A callback function to be invoked when the message is dismissed.
+        *
+        * @return {undefined}
+        */
+        function create(div, callback) {
+
+            function clickDelegate(event, instance) {
+                if(!instance.__internal.closeButton || event.target.getAttribute('data-close') === 'true'){
+                    instance.dismiss(true);
+                }
+            }
+
+            function transitionDone(event, instance) {
+                // unbind event
+                off(instance.element, transition.type, transitionDone);
+                // remove the message
+                element.removeChild(instance.element);
+            }
+
+            function initialize(instance) {
+                if (!instance.__internal) {
+                    instance.__internal = {
+                        pushed: false,
+                        delay : undefined,
+                        timer: undefined,
+                        clickHandler: undefined,
+                        transitionEndHandler: undefined,
+                        transitionTimeout: undefined
+                    };
+                    instance.__internal.clickHandler = delegate(instance, clickDelegate);
+                    instance.__internal.transitionEndHandler = delegate(instance, transitionDone);
+                }
+                return instance;
+            }
+            function clearTimers(instance) {
+                clearTimeout(instance.__internal.timer);
+                clearTimeout(instance.__internal.transitionTimeout);
+            }
+            return initialize({
+                /* notification DOM element*/
+                element: div,
+                /*
+                 * Pushes a notification message
+                 * @param {string or DOMElement} content The notification message content
+                 * @param {Number} wait The time (in seconds) to wait before the message is dismissed, a value of 0 means keep open till clicked.
+                 *
+                 */
+                push: function (_content, _wait) {
+                    if (!this.__internal.pushed) {
+
+                        pushInstance(this);
+                        clearTimers(this);
+
+                        var content, wait;
+                        switch (arguments.length) {
+                        case 0:
+                            wait = this.__internal.delay;
+                            break;
+                        case 1:
+                            if (typeof (_content) === 'number') {
+                                wait = _content;
+                            } else {
+                                content = _content;
+                                wait = this.__internal.delay;
+                            }
+                            break;
+                        case 2:
+                            content = _content;
+                            wait = _wait;
+                            break;
+                        }
+                        this.__internal.closeButton = alertify.defaults.notifier.closeButton;
+                        // set contents
+                        if (typeof content !== 'undefined') {
+                            this.setContent(content);
+                        }
+                        // append or insert
+                        if (notifier.__internal.position.indexOf('top') < 0) {
+                            element.appendChild(this.element);
+                        } else {
+                            element.insertBefore(this.element, element.firstChild);
+                        }
+                        reflow = this.element.offsetWidth;
+                        addClass(this.element, classes.visible);
+                        // attach click event
+                        on(this.element, 'click', this.__internal.clickHandler);
+                        return this.delay(wait);
+                    }
+                    return this;
+                },
+                /*
+                 * {Function} callback function to be invoked before dismissing the notification message.
+                 * Remarks: A return value === 'false' will cancel the dismissal
+                 *
+                 */
+                ondismiss: function () { },
+                /*
+                 * {Function} callback function to be invoked when the message is dismissed.
+                 *
+                 */
+                callback: callback,
+                /*
+                 * Dismisses the notification message
+                 * @param {Boolean} clicked A flag indicating if the dismissal was caused by a click.
+                 *
+                 */
+                dismiss: function (clicked) {
+                    if (this.__internal.pushed) {
+                        clearTimers(this);
+                        if (!(typeof this.ondismiss === 'function' && this.ondismiss.call(this) === false)) {
+                            //detach click event
+                            off(this.element, 'click', this.__internal.clickHandler);
+                            // ensure element exists
+                            if (typeof this.element !== 'undefined' && this.element.parentNode === element) {
+                                //transition end or fallback
+                                this.__internal.transitionTimeout = setTimeout(this.__internal.transitionEndHandler, transition.supported ? 1000 : 100);
+                                removeClass(this.element, classes.visible);
+
+                                // custom callback on dismiss
+                                if (typeof this.callback === 'function') {
+                                    this.callback.call(this, clicked);
+                                }
+                            }
+                            popInstance(this);
+                        }
+                    }
+                    return this;
+                },
+                /*
+                 * Delays the notification message dismissal
+                 * @param {Number} wait The time (in seconds) to wait before the message is dismissed, a value of 0 means keep open till clicked.
+                 *
+                 */
+                delay: function (wait) {
+                    clearTimers(this);
+                    this.__internal.delay = typeof wait !== 'undefined' && !isNaN(+wait) ? +wait : notifier.__internal.delay;
+                    if (this.__internal.delay > 0) {
+                        var  self = this;
+                        this.__internal.timer = setTimeout(function () { self.dismiss(); }, this.__internal.delay * 1000);
+                    }
+                    return this;
+                },
+                /*
+                 * Sets the notification message contents
+                 * @param {string or DOMElement} content The notification message content
+                 *
+                 */
+                setContent: function (content) {
+                    if (typeof content === 'string') {
+                        clearContents(this.element);
+                        this.element.innerHTML = content;
+                    } else if (content instanceof window.HTMLElement && this.element.firstChild !== content) {
+                        clearContents(this.element);
+                        this.element.appendChild(content);
+                    }
+                    if(this.__internal.closeButton){
+                        var close = document.createElement('span');
+                        addClass(close, classes.close);
+                        close.setAttribute('data-close', true);
+                        this.element.appendChild(close);
+                    }
+                    return this;
+                },
+                /*
+                 * Dismisses all open notifications except this.
+                 *
+                 */
+                dismissOthers: function () {
+                    notifier.dismissAll(this);
+                    return this;
+                }
+            });
+        }
+
+        //notifier api
+        return {
+            /**
+             * Gets or Sets notifier settings.
+             *
+             * @param {string} key The setting name
+             * @param {Variant} value The setting value.
+             *
+             * @return {Object}	if the called as a setter, return the notifier instance.
+             */
+            setting: function (key, value) {
+                //ensure init
+                initialize(this);
+
+                if (typeof value === 'undefined') {
+                    //get
+                    return this.__internal[key];
+                } else {
+                    //set
+                    switch (key) {
+                    case 'position':
+                        this.__internal.position = value;
+                        updatePosition(this);
+                        break;
+                    case 'delay':
+                        this.__internal.delay = value;
+                        break;
+                    }
+                }
+                return this;
+            },
+            /**
+             * [Alias] Sets dialog settings/options
+             */
+            set:function(key,value){
+                this.setting(key,value);
+                return this;
+            },
+            /**
+             * [Alias] Gets dialog settings/options
+             */
+            get:function(key){
+                return this.setting(key);
+            },
+            /**
+             * Creates a new notification message
+             *
+             * @param {string} type The type of notification message (simply a CSS class name 'ajs-{type}' to be added).
+             * @param {Function} callback  A callback function to be invoked when the message is dismissed.
+             *
+             * @return {undefined}
+             */
+            create: function (type, callback) {
+                //ensure notifier init
+                initialize(this);
+                //create new notification message
+                var div = document.createElement('div');
+                div.className = classes.message + ((typeof type === 'string' && type !== '') ? ' ajs-' + type : '');
+                return create(div, callback);
+            },
+            /**
+             * Dismisses all open notifications.
+             *
+             * @param {Object} excpet [optional] The notification object to exclude from dismissal.
+             *
+             */
+            dismissAll: function (except) {
+                var clone = openInstances.slice(0);
+                for (var x = 0; x < clone.length; x += 1) {
+                    var  instance = clone[x];
+                    if (except === undefined || except !== instance) {
+                        instance.dismiss();
+                    }
+                }
+            }
+        };
+    })();
+
+    /**
+     * Alertify public API
+     * This contains everything that is exposed through the alertify object.
+     *
+     * @return {Object}
+     */
+    function Alertify() {
+
+        // holds a references of created dialogs
+        var dialogs = {};
+
+        /**
+         * Extends a given prototype by merging properties from base into sub.
+         *
+         * @sub {Object} sub The prototype being overwritten.
+         * @base {Object} base The prototype being written.
+         *
+         * @return {Object} The extended prototype.
+         */
+        function extend(sub, base) {
+            // copy dialog pototype over definition.
+            for (var prop in base) {
+                if (base.hasOwnProperty(prop)) {
+                    sub[prop] = base[prop];
+                }
+            }
+            return sub;
+        }
+
+
+        /**
+        * Helper: returns a dialog instance from saved dialogs.
+        * and initializes the dialog if its not already initialized.
+        *
+        * @name {String} name The dialog name.
+        *
+        * @return {Object} The dialog instance.
+        */
+        function get_dialog(name) {
+            var dialog = dialogs[name].dialog;
+            //initialize the dialog if its not already initialized.
+            if (dialog && typeof dialog.__init === 'function') {
+                dialog.__init(dialog);
+            }
+            return dialog;
+        }
+
+        /**
+         * Helper:  registers a new dialog definition.
+         *
+         * @name {String} name The dialog name.
+         * @Factory {Function} Factory a function resposible for creating dialog prototype.
+         * @transient {Boolean} transient True to create a new dialog instance each time the dialog is invoked, false otherwise.
+         * @base {String} base the name of another dialog to inherit from.
+         *
+         * @return {Object} The dialog definition.
+         */
+        function register(name, Factory, transient, base) {
+            var definition = {
+                dialog: null,
+                factory: Factory
+            };
+
+            //if this is based on an existing dialog, create a new definition
+            //by applying the new protoype over the existing one.
+            if (base !== undefined) {
+                definition.factory = function () {
+                    return extend(new dialogs[base].factory(), new Factory());
+                };
+            }
+
+            if (!transient) {
+                //create a new definition based on dialog
+                definition.dialog = extend(new definition.factory(), dialog);
+            }
+            return dialogs[name] = definition;
+        }
+
+        return {
+            /**
+             * Alertify defaults
+             * 
+             * @type {Object}
+             */
+            defaults: defaults,
+            /**
+             * Dialogs factory 
+             *
+             * @param {string}      Dialog name.
+             * @param {Function}    A Dialog factory function.
+             * @param {Boolean}     Indicates whether to create a singleton or transient dialog.
+             * @param {String}      The name of the base type to inherit from.
+             */
+            dialog: function (name, Factory, transient, base) {
+
+                // get request, create a new instance and return it.
+                if (typeof Factory !== 'function') {
+                    return get_dialog(name);
+                }
+
+                if (this.hasOwnProperty(name)) {
+                    throw new Error('alertify.dialog: name already exists');
+                }
+
+                // register the dialog
+                var definition = register(name, Factory, transient, base);
+
+                if (transient) {
+
+                    // make it public
+                    this[name] = function () {
+                        //if passed with no params, consider it a get request
+                        if (arguments.length === 0) {
+                            return definition.dialog;
+                        } else {
+                            var instance = extend(new definition.factory(), dialog);
+                            //ensure init
+                            if (instance && typeof instance.__init === 'function') {
+                                instance.__init(instance);
+                            }
+                            instance['main'].apply(instance, arguments);
+                            return instance['show'].apply(instance);
+                        }
+                    };
+                } else {
+                    // make it public
+                    this[name] = function () {
+                        //ensure init
+                        if (definition.dialog && typeof definition.dialog.__init === 'function') {
+                            definition.dialog.__init(definition.dialog);
+                        }
+                        //if passed with no params, consider it a get request
+                        if (arguments.length === 0) {
+                            return definition.dialog;
+                        } else {
+                            var dialog = definition.dialog;
+                            dialog['main'].apply(definition.dialog, arguments);
+                            return dialog['show'].apply(definition.dialog);
+                        }
+                    };
+                }
+            },
+            /**
+             * Close all open dialogs.
+             *
+             * @param {Object} excpet [optional] The dialog object to exclude from closing.
+             *
+             * @return {undefined}
+             */
+            closeAll: function (except) {
+                var clone = openDialogs.slice(0);
+                for (var x = 0; x < clone.length; x += 1) {
+                    var instance = clone[x];
+                    if (except === undefined || except !== instance) {
+                        instance.close();
+                    }
+                }
+            },
+            /**
+             * Gets or Sets dialog settings/options. if the dialog is transient, this call does nothing.
+             *
+             * @param {string} name The dialog name.
+             * @param {String|Object} key A string specifying a propery name or a collection of key/value pairs.
+             * @param {Variant} value Optional, the value associated with the key (in case it was a string).
+             *
+             * @return {undefined}
+             */
+            setting: function (name, key, value) {
+
+                if (name === 'notifier') {
+                    return notifier.setting(key, value);
+                }
+
+                var dialog = get_dialog(name);
+                if (dialog) {
+                    return dialog.setting(key, value);
+                }
+            },
+            /**
+             * [Alias] Sets dialog settings/options 
+             */
+            set: function(name,key,value){
+                return this.setting(name, key,value);
+            },
+            /**
+             * [Alias] Gets dialog settings/options 
+             */
+            get: function(name, key){
+                return this.setting(name, key);
+            },
+            /**
+             * Creates a new notification message.
+             * If a type is passed, a class name "ajs-{type}" will be added.
+             * This allows for custom look and feel for various types of notifications.
+             *
+             * @param  {String | DOMElement}    [message=undefined]		Message text
+             * @param  {String}                 [type='']				Type of log message
+             * @param  {String}                 [wait='']				Time (in seconds) to wait before auto-close
+             * @param  {Function}               [callback=undefined]	A callback function to be invoked when the log is closed.
+             *
+             * @return {Object} Notification object.
+             */
+            notify: function (message, type, wait, callback) {
+                return notifier.create(type, callback).push(message, wait);
+            },
+            /**
+             * Creates a new notification message.
+             *
+             * @param  {String}		[message=undefined]		Message text
+             * @param  {String}     [wait='']				Time (in seconds) to wait before auto-close
+             * @param  {Function}	[callback=undefined]	A callback function to be invoked when the log is closed.
+             *
+             * @return {Object} Notification object.
+             */
+            message: function (message, wait, callback) {
+                return notifier.create(null, callback).push(message, wait);
+            },
+            /**
+             * Creates a new notification message of type 'success'.
+             *
+             * @param  {String}		[message=undefined]		Message text
+             * @param  {String}     [wait='']				Time (in seconds) to wait before auto-close
+             * @param  {Function}	[callback=undefined]	A callback function to be invoked when the log is closed.
+             *
+             * @return {Object} Notification object.
+             */
+            success: function (message, wait, callback) {
+                return notifier.create('success', callback).push(message, wait);
+            },
+            /**
+             * Creates a new notification message of type 'error'.
+             *
+             * @param  {String}		[message=undefined]		Message text
+             * @param  {String}     [wait='']				Time (in seconds) to wait before auto-close
+             * @param  {Function}	[callback=undefined]	A callback function to be invoked when the log is closed.
+             *
+             * @return {Object} Notification object.
+             */
+            error: function (message, wait, callback) {
+                return notifier.create('error', callback).push(message, wait);
+            },
+            /**
+             * Creates a new notification message of type 'warning'.
+             *
+             * @param  {String}		[message=undefined]		Message text
+             * @param  {String}     [wait='']				Time (in seconds) to wait before auto-close
+             * @param  {Function}	[callback=undefined]	A callback function to be invoked when the log is closed.
+             *
+             * @return {Object} Notification object.
+             */
+            warning: function (message, wait, callback) {
+                return notifier.create('warning', callback).push(message, wait);
+            },
+            /**
+             * Dismisses all open notifications
+             *
+             * @return {undefined}
+             */
+            dismissAll: function () {
+                notifier.dismissAll();
+            }
+        };
+    }
+    var alertify = new Alertify();
+
+    /**
+    * Alert dialog definition
+    *
+    * invoked by:
+    *	alertify.alert(message);
+    *	alertify.alert(title, message);
+    *	alertify.alert(message, onok);
+    *	alertify.alert(title, message, onok);
+     */
+    alertify.dialog('alert', function () {
+        return {
+            main: function (_title, _message, _onok) {
+                var title, message, onok;
+                switch (arguments.length) {
+                case 1:
+                    message = _title;
+                    break;
+                case 2:
+                    if (typeof _message === 'function') {
+                        message = _title;
+                        onok = _message;
+                    } else {
+                        title = _title;
+                        message = _message;
+                    }
+                    break;
+                case 3:
+                    title = _title;
+                    message = _message;
+                    onok = _onok;
+                    break;
+                }
+                this.set('title', title);
+                this.set('message', message);
+                this.set('onok', onok);
+                return this;
+            },
+            setup: function () {
+                return {
+                    buttons: [
+                        {
+                            text: alertify.defaults.glossary.ok,
+                            key: keys.ESC,
+                            invokeOnClose: true,
+                            className: alertify.defaults.theme.ok,
+                        }
+                    ],
+                    focus: {
+                        element: 0,
+                        select: false
+                    },
+                    options: {
+                        maximizable: false,
+                        resizable: false
+                    }
+                };
+            },
+            build: function () {
+                // nothing
+            },
+            prepare: function () {
+                //nothing
+            },
+            setMessage: function (message) {
+                this.setContent(message);
+            },
+            settings: {
+                message: undefined,
+                onok: undefined,
+                label: undefined,
+            },
+            settingUpdated: function (key, oldValue, newValue) {
+                switch (key) {
+                case 'message':
+                    this.setMessage(newValue);
+                    break;
+                case 'label':
+                    if (this.__internal.buttons[0].element) {
+                        this.__internal.buttons[0].element.innerHTML = newValue;
+                    }
+                    break;
+                }
+            },
+            callback: function (closeEvent) {
+                if (typeof this.get('onok') === 'function') {
+                    var returnValue = this.get('onok').call(this, closeEvent);
+                    if (typeof returnValue !== 'undefined') {
+                        closeEvent.cancel = !returnValue;
+                    }
+                }
+            }
+        };
+    });
+    /**
+     * Confirm dialog object
+     *
+     *	alertify.confirm(message);
+     *	alertify.confirm(message, onok);
+     *	alertify.confirm(message, onok, oncancel);
+     *	alertify.confirm(title, message, onok, oncancel);
+     */
+    alertify.dialog('confirm', function () {
+
+        var autoConfirm = {
+            timer: null,
+            index: null,
+            text: null,
+            duration: null,
+            task: function (event, self) {
+                if (self.isOpen()) {
+                    self.__internal.buttons[autoConfirm.index].element.innerHTML = autoConfirm.text + ' (&#8207;' + autoConfirm.duration + '&#8207;) ';
+                    autoConfirm.duration -= 1;
+                    if (autoConfirm.duration === -1) {
+                        clearAutoConfirm(self);
+                        var button = self.__internal.buttons[autoConfirm.index];
+                        var closeEvent = createCloseEvent(autoConfirm.index, button);
+
+                        if (typeof self.callback === 'function') {
+                            self.callback.apply(self, [closeEvent]);
+                        }
+                        //close the dialog.
+                        if (closeEvent.close !== false) {
+                            self.close();
+                        }
+                    }
+                } else {
+                    clearAutoConfirm(self);
+                }
+            }
+        };
+
+        function clearAutoConfirm(self) {
+            if (autoConfirm.timer !== null) {
+                clearInterval(autoConfirm.timer);
+                autoConfirm.timer = null;
+                self.__internal.buttons[autoConfirm.index].element.innerHTML = autoConfirm.text;
+            }
+        }
+
+        function startAutoConfirm(self, index, duration) {
+            clearAutoConfirm(self);
+            autoConfirm.duration = duration;
+            autoConfirm.index = index;
+            autoConfirm.text = self.__internal.buttons[index].element.innerHTML;
+            autoConfirm.timer = setInterval(delegate(self, autoConfirm.task), 1000);
+            autoConfirm.task(null, self);
+        }
+
+
+        return {
+            main: function (_title, _message, _onok, _oncancel) {
+                var title, message, onok, oncancel;
+                switch (arguments.length) {
+                case 1:
+                    message = _title;
+                    break;
+                case 2:
+                    message = _title;
+                    onok = _message;
+                    break;
+                case 3:
+                    message = _title;
+                    onok = _message;
+                    oncancel = _onok;
+                    break;
+                case 4:
+                    title = _title;
+                    message = _message;
+                    onok = _onok;
+                    oncancel = _oncancel;
+                    break;
+                }
+                this.set('title', title);
+                this.set('message', message);
+                this.set('onok', onok);
+                this.set('oncancel', oncancel);
+                return this;
+            },
+            setup: function () {
+                return {
+                    buttons: [
+                        {
+                            text: alertify.defaults.glossary.ok,
+                            key: keys.ENTER,
+                            className: alertify.defaults.theme.ok,
+                        },
+                        {
+                            text: alertify.defaults.glossary.cancel,
+                            key: keys.ESC,
+                            invokeOnClose: true,
+                            className: alertify.defaults.theme.cancel,
+                        }
+                    ],
+                    focus: {
+                        element: 0,
+                        select: false
+                    },
+                    options: {
+                        maximizable: false,
+                        resizable: false
+                    }
+                };
+            },
+            build: function () {
+                //nothing
+            },
+            prepare: function () {
+                //nothing
+            },
+            setMessage: function (message) {
+                this.setContent(message);
+            },
+            settings: {
+                message: null,
+                labels: null,
+                onok: null,
+                oncancel: null,
+                defaultFocus: null,
+                reverseButtons: null,
+            },
+            settingUpdated: function (key, oldValue, newValue) {
+                switch (key) {
+                case 'message':
+                    this.setMessage(newValue);
+                    break;
+                case 'labels':
+                    if ('ok' in newValue && this.__internal.buttons[0].element) {
+                        this.__internal.buttons[0].text = newValue.ok;
+                        this.__internal.buttons[0].element.innerHTML = newValue.ok;
+                    }
+                    if ('cancel' in newValue && this.__internal.buttons[1].element) {
+                        this.__internal.buttons[1].text = newValue.cancel;
+                        this.__internal.buttons[1].element.innerHTML = newValue.cancel;
+                    }
+                    break;
+                case 'reverseButtons':
+                    if (newValue === true) {
+                        this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element);
+                    } else {
+                        this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element);
+                    }
+                    break;
+                case 'defaultFocus':
+                    this.__internal.focus.element = newValue === 'ok' ? 0 : 1;
+                    break;
+                }
+            },
+            callback: function (closeEvent) {
+                clearAutoConfirm(this);
+                var returnValue;
+                switch (closeEvent.index) {
+                case 0:
+                    if (typeof this.get('onok') === 'function') {
+                        returnValue = this.get('onok').call(this, closeEvent);
+                        if (typeof returnValue !== 'undefined') {
+                            closeEvent.cancel = !returnValue;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (typeof this.get('oncancel') === 'function') {
+                        returnValue = this.get('oncancel').call(this, closeEvent);
+                        if (typeof returnValue !== 'undefined') {
+                            closeEvent.cancel = !returnValue;
+                        }
+                    }
+                    break;
+                }
+            },
+            autoOk: function (duration) {
+                startAutoConfirm(this, 0, duration);
+                return this;
+            },
+            autoCancel: function (duration) {
+                startAutoConfirm(this, 1, duration);
+                return this;
+            }
+        };
+    });
+    /**
+     * Prompt dialog object
+     *
+     * invoked by:
+     *	alertify.prompt(message);
+     *	alertify.prompt(message, value);
+     *	alertify.prompt(message, value, onok);
+     *	alertify.prompt(message, value, onok, oncancel);
+     *	alertify.prompt(title, message, value, onok, oncancel);
+     */
+    alertify.dialog('prompt', function () {
+        var input = document.createElement('INPUT');
+        var p = document.createElement('P');
+        return {
+            main: function (_title, _message, _value, _onok, _oncancel) {
+                var title, message, value, onok, oncancel;
+                switch (arguments.length) {
+                case 1:
+                    message = _title;
+                    break;
+                case 2:
+                    message = _title;
+                    value = _message;
+                    break;
+                case 3:
+                    message = _title;
+                    value = _message;
+                    onok = _value;
+                    break;
+                case 4:
+                    message = _title;
+                    value = _message;
+                    onok = _value;
+                    oncancel = _onok;
+                    break;
+                case 5:
+                    title = _title;
+                    message = _message;
+                    value = _value;
+                    onok = _onok;
+                    oncancel = _oncancel;
+                    break;
+                }
+                this.set('title', title);
+                this.set('message', message);
+                this.set('value', value);
+                this.set('onok', onok);
+                this.set('oncancel', oncancel);
+                return this;
+            },
+            setup: function () {
+                return {
+                    buttons: [
+                        {
+                            text: alertify.defaults.glossary.ok,
+                            key: keys.ENTER,
+                            className: alertify.defaults.theme.ok,
+                        },
+                        {
+                            text: alertify.defaults.glossary.cancel,
+                            key: keys.ESC,
+                            invokeOnClose: true,
+                            className: alertify.defaults.theme.cancel,
+                        }
+                    ],
+                    focus: {
+                        element: input,
+                        select: true
+                    },
+                    options: {
+                        maximizable: false,
+                        resizable: false
+                    }
+                };
+            },
+            build: function () {
+                input.className = alertify.defaults.theme.input;
+                input.setAttribute('type', 'text');
+                input.value = this.get('value');
+                this.elements.content.appendChild(p);
+                this.elements.content.appendChild(input);
+            },
+            prepare: function () {
+                //nothing
+            },
+            setMessage: function (message) {
+                if (typeof message === 'string') {
+                    clearContents(p);
+                    p.innerHTML = message;
+                } else if (message instanceof window.HTMLElement && p.firstChild !== message) {
+                    clearContents(p);
+                    p.appendChild(message);
+                }
+            },
+            settings: {
+                message: undefined,
+                labels: undefined,
+                onok: undefined,
+                oncancel: undefined,
+                value: '',
+                type:'text',
+                reverseButtons: undefined,
+            },
+            settingUpdated: function (key, oldValue, newValue) {
+                switch (key) {
+                case 'message':
+                    this.setMessage(newValue);
+                    break;
+                case 'value':
+                    input.value = newValue;
+                    break;
+                case 'type':
+                    switch (newValue) {
+                    case 'text':
+                    case 'color':
+                    case 'date':
+                    case 'datetime-local':
+                    case 'email':
+                    case 'month':
+                    case 'number':
+                    case 'password':
+                    case 'search':
+                    case 'tel':
+                    case 'time':
+                    case 'week':
+                        input.type = newValue;
+                        break;
+                    default:
+                        input.type = 'text';
+                        break;
+                    }
+                    break;
+                case 'labels':
+                    if (newValue.ok && this.__internal.buttons[0].element) {
+                        this.__internal.buttons[0].element.innerHTML = newValue.ok;
+                    }
+                    if (newValue.cancel && this.__internal.buttons[1].element) {
+                        this.__internal.buttons[1].element.innerHTML = newValue.cancel;
+                    }
+                    break;
+                case 'reverseButtons':
+                    if (newValue === true) {
+                        this.elements.buttons.primary.appendChild(this.__internal.buttons[0].element);
+                    } else {
+                        this.elements.buttons.primary.appendChild(this.__internal.buttons[1].element);
+                    }
+                    break;
+                }
+            },
+            callback: function (closeEvent) {
+                var returnValue;
+                switch (closeEvent.index) {
+                case 0:
+                    this.settings.value = input.value;
+                    if (typeof this.get('onok') === 'function') {
+                        returnValue = this.get('onok').call(this, closeEvent, this.settings.value);
+                        if (typeof returnValue !== 'undefined') {
+                            closeEvent.cancel = !returnValue;
+                        }
+                    }
+                    break;
+                case 1:
+                    if (typeof this.get('oncancel') === 'function') {
+                        returnValue = this.get('oncancel').call(this, closeEvent);
+                        if (typeof returnValue !== 'undefined') {
+                            closeEvent.cancel = !returnValue;
+                        }
+                    }
+                    if(!closeEvent.cancel){
+                        input.value = this.settings.value;
+                    }
+                    break;
+                }
+            }
+        };
+    });
+
+    // CommonJS
+    if ( typeof module === 'object' && typeof module.exports === 'object' ) {
+        module.exports = alertify;
+    // AMD
+    } else if ( typeof define === 'function' && define.amd) {
+        define( [], function () {
+            return alertify;
+        } );
+    // window
+    } else if ( !window.alertify ) {
+        window.alertify = alertify;
+    }
+
+} ( typeof window !== 'undefined' ? window : this ) );
+
+;

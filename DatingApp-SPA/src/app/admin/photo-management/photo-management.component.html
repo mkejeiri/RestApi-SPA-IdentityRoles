@@ -1,4 +1,7 @@
 <div class="row">
+    <div class="col-sm-8" *ngIf="photos?.length === 0">
+        <p class="medium text-info">No photos awaiting approval!</p> 
+    </div>  
   <div class="col-sm-2" *ngFor="let photo of photos">   
     <h4>{{photo.userName}}</h4> 
     <img src="{{photo.url}}" class="img-thumbnail p-1" alt="">
