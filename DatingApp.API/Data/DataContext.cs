@@ -35,7 +35,7 @@ namespace DatingApp.API.Data
 
             //since we are using Identity we need to call this to configure the schema needed for EF
             base.OnModelCreating(builder);
-
+            builder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
             builder.Entity<UserRole>(userRole => {
                 userRole.HasKey(k => new {k.UserId, k.RoleId});
                 userRole.HasOne(ur => ur.Role)

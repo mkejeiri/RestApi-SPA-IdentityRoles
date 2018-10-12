@@ -19,10 +19,32 @@ namespace DatingApp.API.Data
 
         public async Task<Photo> GetMainPhotoForUser(int userId) => await _context.Photos.Where(p => p.UserId == userId).FirstOrDefaultAsync(p => p.IsMain);
 
-        public async Task<Photo> GetPhoto(int id) => await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
+        public async Task<Photo> GetPhoto(int id) {             
+            return await _context.Photos.IgnoreQueryFilters().FirstOrDefaultAsync(p => p.Id == id);
+        } 
 
-        public async Task<User> GetUser(int id) =>
-        await _context.Users.Include(x => x.Photos).FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<User> GetUser(int id, bool isCurrentUser) {           
+
+            var query = _context.Users
+                                .Include(x => x.Photos).AsQueryable();
+
+            query = (isCurrentUser) ? query.IgnoreQueryFilters() : query;
+
+            return await query.FirstOrDefaultAsync(u => u.Id == id);
+
+            // if (ignoreQueryFilters)
+            // {
+            //     return await _context.Users
+            //                     .Include(x => x.Photos)
+            //                     .IgnoreQueryFilters()
+            //                     .FirstOrDefaultAsync(u => u.Id == id);    
+            // } else {
+            //     return await _context.Users
+            //                     .Include(x => x.Photos)
+            //                     .FirstOrDefaultAsync(u => u.Id == id);
+            // }
+        }
+        
         public async Task<bool> SaveAll() => await _context.SaveChangesAsync() > 0;
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
@@ -155,6 +177,12 @@ namespace DatingApp.API.Data
                                         select role.Name                                        
                                          ).ToArray()
                                     }).ToListAsync();
+        }
+
+        public async Task<List<Photo>> GetPendingApprovalPhotos()
+        {
+            return await _context.Photos.Include(p=> p.User).IgnoreQueryFilters().Where(p => p.IsApproved == false).ToListAsync();
+
         }
     }
 }

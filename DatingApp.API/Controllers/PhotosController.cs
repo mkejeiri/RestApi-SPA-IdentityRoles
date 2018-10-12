@@ -46,7 +46,7 @@ namespace DatingApp.API.Controllers
                */
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId,userId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             var file = photoForCreationDto.File;
 
             //uploadResult is storing the result we getting back from Cloudinary
@@ -127,7 +127,7 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);  
+            var userFromRepo = await _repo.GetUser(userId, userId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));  
 
             /*
                 check if a main photo exist and the current photo belong to the current user
@@ -155,7 +155,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> Delete(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId,userId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
             if (!userFromRepo.Photos.Any(p => p.Id == id))
             {
                 return Unauthorized();

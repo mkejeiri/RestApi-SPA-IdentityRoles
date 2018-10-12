@@ -27,7 +27,7 @@ namespace DatingApp.API.Helpers
 
            //we need to get our repo, provided as a service in our DI container
            var repo = resultContext.HttpContext.RequestServices.GetService<IDatingRepository>();
-           var user = await repo.GetUser(userId);
+           var user = await repo.GetUser(userId,true);
            user.LastActive = DateTime.Now;
            await repo.SaveAll();
         }

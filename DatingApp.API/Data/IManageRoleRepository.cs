@@ -7,6 +7,7 @@ namespace DatingApp.API.Data
 {
     public interface IManageRoleRepository
     {
-         Task<List<UserWithRole>> GetUserWithRoles();
+        Task<List<UserWithRole>> GetUserWithRoles();
+        Task<List<Photo>> GetPendingApprovalPhotos();    
     }
 }

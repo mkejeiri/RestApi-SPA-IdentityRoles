@@ -40,13 +40,19 @@ namespace DatingApp.API.Data
                 
                 //create user in the table 
                 foreach (var user in users) {
+                    // by default a photo IsApproved is null so the default is false
+                    // we need to set initial data seed main photo to IsApproved to true 
+                    user.Photos.SingleOrDefault().IsApproved = true; 
                     _userManager.CreateAsync(user, "password").Wait();
                     _userManager.AddToRoleAsync(user, "Member").Wait();
                     }
 
                 //create an Admin user who has access to the full App
                 var adminUser = new User(){
-                    UserName="Admin"
+                    UserName="Admin",
+                    Gender = "male",
+                    KnownAs="Admin"
+
                 };
 
                 //we won't create AdminUser yet, no need for Wait() operator

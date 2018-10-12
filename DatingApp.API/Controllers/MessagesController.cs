@@ -35,7 +35,8 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
 
-            var userFromRepo = await _repo.GetUser(userId);
+            var userFromRepo = await _repo.GetUser(userId,userId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
+            
             var messageFromRepo = await _repo.GetMessage(messageId);
 
             // if (messageFromRepo == null)
@@ -54,7 +55,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> CreateMessage(int userId,
                 MessageForCreationDto messageForCreationDto)                
         {
-            var sender = await  _repo.GetUser(userId);
+            var sender = await  _repo.GetUser(userId,false);
             // if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value)) return Unauthorized();
             // if (messageForCreationDto.RecipientId == userId)
@@ -62,7 +63,7 @@ namespace DatingApp.API.Controllers
             //     return BadRequest("You cannot send a message to your self");
             // }
             messageForCreationDto.SenderId = userId;
-            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId);
+            var recipient = await _repo.GetUser(messageForCreationDto.RecipientId,false);
 
             if (recipient == null)
             {

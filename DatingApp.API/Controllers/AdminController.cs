@@ -1,12 +1,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Controllers
 {
@@ -14,20 +19,34 @@ namespace DatingApp.API.Controllers
     [Route("api/[controller]")]
     public class AdminController : ControllerBase
     {
-        private readonly IManageRoleRepository _repo;
+        private readonly IManageRoleRepository _iManageRoleRepo;
         private readonly UserManager<User> _userManager;
+        private readonly IDatingRepository _repo;
+        private readonly IMapper _mapper;
+         private readonly Cloudinary _cloudinary;
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
 
-        public AdminController(IManageRoleRepository repo, UserManager<User> userManager)
+        public AdminController(IManageRoleRepository iManageRoleRepo, 
+        UserManager<User> userManager, IDatingRepository iDatingRepo, IMapper mapper, IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _userManager = userManager;
-            _repo = repo;
+            _repo = iDatingRepo;
+            _mapper = mapper;
+            _cloudinaryConfig = cloudinaryConfig;
+            _iManageRoleRepo = iManageRoleRepo;
+
+              Account acc = new Account(
+                    cloudinaryConfig.Value.CouldName,
+                    cloudinaryConfig.Value.ApiKey,
+                    cloudinaryConfig.Value.ApiSecret);
+            _cloudinary = new Cloudinary(acc);
         }
 
         [Authorize(Policy = "RequiredAdminRole")]
         [HttpGet("usersWithRoles")]
         public async Task<IActionResult> GetUserWithRole()
         {
-            return Ok(await _repo.GetUserWithRoles());
+            return Ok(await _iManageRoleRepo.GetUserWithRoles());
         }
 
 
@@ -58,16 +77,59 @@ namespace DatingApp.API.Controllers
 
         [Authorize(Policy = "ModeratePhotoRole")]
         [HttpGet("photosForModeration")]
-        public IActionResult GetPhotosForModeration()
+        public async Task<IActionResult> GetPhotosForModeration()
         {
-            return Ok("Admins or moderators can see this");
+            var photos = await  _iManageRoleRepo.GetPendingApprovalPhotos();           
+            var photosToReturn = _mapper.Map<List<PhotoForReturnDto>>(photos);
+            return Ok(photosToReturn);
         }
 
-        [Authorize(Policy = "VipOnly")]
-        [HttpGet("vip")]
-        public IActionResult GetVip()
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPost("rejectPhoto/{photoId}")]
+        public async Task<IActionResult> RejectPhotoForModeration(int photoId)
         {
-            return Ok("Only VIP can see this");
+            var photoFromRepo = await _repo.GetPhoto(photoId);
+
+            if (photoFromRepo.IsMain)
+            {
+                return BadRequest("You can't delete the main photo");
+            } 
+
+             if (photoFromRepo.IsMain)
+            {
+                return BadRequest("You cannot delete your main photo!");
+            }
+
+            if (photoFromRepo.PublicId != null)
+            {
+                var result = _cloudinary.Destroy(new DeletionParams(photoFromRepo.PublicId)
+                {
+                    ResourceType = CloudinaryDotNet.Actions.ResourceType.Image
+                });
+
+                if (result.Result == "ok")
+                {
+                    _repo.Delete<Photo>(photoFromRepo);
+                }
+            }
+            else
+            {
+                _repo.Delete<Photo>(photoFromRepo);
+            }
+
+            if (await _repo.SaveAll()) return Ok();
+            return BadRequest("Failed to delete the photo!");
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpPost("approvePhoto/{photoId}")]
+        public async Task<IActionResult> ApprovePhotoForModeration(int photoId)
+        {
+
+            var photoFromRepo = await _repo.GetPhoto(photoId);
+            photoFromRepo.IsApproved = true;
+            if (await _repo.SaveAll()) return Ok();
+             return BadRequest("Failed to approve the photo!");
         }
     }
 }
